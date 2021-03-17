@@ -8,7 +8,7 @@
 % ------------------------------------------------------------------------
 
 % Todd Karin
-%IMAGEFOLDER2MPEG - create an mpeg video from images
+% IMAGEFOLDER2MPEG - create an mpeg video from images
 %
 % imageFolder2mpeg(folderName) creates an mpeg (.mp4) video by stitching
 % together the images in the folder named folderName. The images are read

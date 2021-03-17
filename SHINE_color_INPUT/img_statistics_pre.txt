@@ -1,0 +1,6 @@
+Img	Mean_hsv_pre	SD_hsv_pre
+SHINE_color_2003-600.jpg	0.9367	0.1411
+SHINE_color_2036-600.jpg	0.9408	0.1430
+SHINE_color_2038-600.jpg	0.9360	0.1408
+SHINE_color_2048-600.jpg	0.9409	0.1426
+Pooled	0.9386	0.1419

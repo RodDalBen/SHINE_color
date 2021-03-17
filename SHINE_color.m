@@ -491,7 +491,7 @@ for im = 1:numim
             color_im = hsv2rgb(color_im);
             
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',imname{im}))); % SHINE_color: original command
-            imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',imname{im}))); % SHINE_color: writing the colorful image
+            imwrite(color_im, fullfile(output_folder,strcat('SHINE_color_',imname{im}))); % SHINE_color: writing the colorful image
         end
     end
     rmsqe = getRMSE(images_orig{im},images{im});

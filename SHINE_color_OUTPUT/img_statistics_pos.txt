@@ -1,0 +1,6 @@
+Img	Mean_hsv_pos	SD_hsv_pos
+SHINE_color_SHINE_color_2003-600.jpg	0.9367	0.1411
+SHINE_color_SHINE_color_2036-600.jpg	0.9376	0.1415
+SHINE_color_SHINE_color_2038-600.jpg	0.9362	0.1409
+SHINE_color_SHINE_color_2048-600.jpg	0.9376	0.1413
+Pooled	0.9370	0.1412
