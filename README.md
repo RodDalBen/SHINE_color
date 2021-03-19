@@ -30,6 +30,9 @@ If you have no experience with MATLAB, just follow these steps (images available
 4. Type "SHINE_color" (case sensitive);
 5. Follow the prompts and select the operations you would like;
 6. Once it is done (the sign ">>" is back on the editor), check the "SHINE_color_OUTPUT" folder. There you will find your processed images/videos and some statistics. Also check the input folder for pre-processing statistics.
+
+***
+
 References
 
 Dal Ben, R. (2019). SHINE color and Lum_fun: A set of tools to control luminance of colored images (Version 0.2). [Computer program]. doi: 10.17605/OSF.IO/AUZJY, retrieved from https://osf.io/auzjy/
