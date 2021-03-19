@@ -22,7 +22,7 @@ For illustration purposes, the input folder contains 4 pictures from the NOUN da
 
 #### TUTORIAL
 
-If you have no experience with MATLAB, just follow these steps (images available on the files tab):
+If you have no experience with MATLAB, just follow these steps (images available on the files tab of the [OSF project](https://osf.io/auzjy/)):
 
 1. Download/clone the `SHINE_color` & unzip it on the desired folder;
 2. Add the images/videos to be processed in the "SHINE_color_INPUT" folder;
