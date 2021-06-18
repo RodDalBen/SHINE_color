@@ -4,35 +4,35 @@
 %
 % INPUT:
 % (1) images: a cell (1xN or Nx1) that contains N source image matrices
-%      Example 1: 
-%       images = cell(3,1); 
-%       images{1} = pic1; 
+%      Example 1:
+%       images = cell(3,1);
+%       images{1} = pic1;
 %       images{2} = pic2;
 %       images{3} = pic3;
-%      Example 2: 
+%      Example 2:
 %       [images,N] = readImages(pathname,imformat);
-% (2) templ: optional; contains the template(s) for figure-ground 
-%     segregation; templ can be a single matrix (of the same size as the 
-%     pictures) or a cell of N matrices; the background must be 
+% (2) templ: optional; contains the template(s) for figure-ground
+%     segregation; templ can be a single matrix (of the same size as the
+%     pictures) or a cell of N matrices; the background must be
 %     uniform and of a luminance that does NOT occur in the foreground
-%     (e.g., recommended: use a background of 255 and a foreground 
+%     (e.g., recommended: use a background of 255 and a foreground
 %     of values between 0 and 254)
 %
 % OUTPUT:
 % (1) images: optional; SHINEd images stored in a cell
 %
-% Alternatively, SHINE can be used to load and save the images 
+% Alternatively, SHINE can be used to load and save the images
 % automatically:
-% 1. Put all source images in the SHINE_INPUT folder and make sure that it 
-%    does not contain any other files of the same format and that the 
-%    pathnames are correct (lines 70-72 of SHINE.m) 
+% 1. Put all source images in the SHINE_INPUT folder and make sure that it
+%    does not contain any other files of the same format and that the
+%    pathnames are correct (lines 70-72 of SHINE.m)
 % 2. Specify the image format in line 69 of SHINE.m (imformat)
 % 3. Optional: Put the templates in the SHINE_TEMPLATE folder and make sure
 %    the folder does not contain any other files of the same format
 % 4. Type the following in the Matlab command window to start the program:
 %    SHINE
-% 5. Press enter and choose among the shine options that appear in the 
-%    command window. 
+% 5. Press enter and choose among the shine options that appear in the
+%    command window.
 %
 %    If you want to QUIT the program, press ENTER without
 %    choosing an option.
@@ -62,24 +62,24 @@
 % SHINE_color toolbox, February 2019, version 0.1
 % adapted by Rodrigo Dal Ben
 %
-% Convert RGB images to HSV and apply SHINE toolbox functions to the 
-% scaled Value channel (luminance). Then, the Value channel is rescaled 
+% Convert RGB images to HSV and apply SHINE toolbox functions to the
+% scaled Value channel (luminance). Then, the Value channel is rescaled
 % and concatenated with Hue and Saturation channels.
-% 
+%
 % Three customs functions are used:
 % v2scale: convert RGB to HSV and scale the Value channel (0-1) to 0-255;
 % scale2v: rescale values from 0-255 to 0-1;
 % lum_calc: calculates the Value channel values of the original and new
 % images (the output is a .txt file saved on the images output folder).
 %
-% The major adaptations were made on the "readImages" function. 
-% Nonetheless the function "rgb2gray" was replaced by "v2scale" on all 
+% The major adaptations were made on the "readImages" function.
+% Nonetheless the function "rgb2gray" was replaced by "v2scale" on all
 % functions that it was called.
 %
-% All adaptations are commented and comments always begin with 
+% All adaptations are commented and comments always begin with
 % "SHINE_color:"
 %
-% Kindly report any suggestions or corrections on the adaptations to 
+% Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
 % SHINE_color toolbox, April 2019, version 0.2
@@ -88,19 +88,19 @@
 % The toolbox now handles video files.
 % If a video file is provided, all frames will be extracted, SHINE_color
 % operations will be performed on each frame, and the video will be
-% re-created with the manipulated frames. 
-% All the frames (pre and pos manipulations), their statistics, and the 
+% re-created with the manipulated frames.
+% All the frames (pre and pos manipulations), their statistics, and the
 % new video are outputted.
 %
-% Two functions were added: 
+% Two functions were added:
 % video2frames: to extract all frames of a video;
-% frames2mpeg (+ getAllFilesInFolder): to re-create the video. This is an 
-% adaptation of the "imageFolder2mpeg" function created by Todd Karin. 
+% frames2mpeg (+ getAllFilesInFolder): to re-create the video. This is an
+% adaptation of the "imageFolder2mpeg" function created by Todd Karin.
 %
-% All adaptations are commented and comments always begin with 
+% All adaptations are commented and comments always begin with
 % "SHINE_color:"
 %
-% Kindly report any suggestions or corrections on the adaptations to 
+% Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
 
@@ -109,12 +109,12 @@
 function images = SHINE_color(images,templ)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Specify the image format and the input/output directories here if SHINE  
+% Specify the image format and the input/output directories here if SHINE
 % is called without input or output arguments:
 input_folder = fullfile(pwd, 'SHINE_color_INPUT'); % SHINE_color: changed from matlabroot to the current directory
 output_folder = fullfile(pwd,'SHINE_color_OUTPUT'); % SHINE_color: changed from matlabroot to the current directory
 template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); % SHINE_color: changed from matlabroot to the current directory
-        
+
 % SHINE_color: start by selecting image or video processing:
 prompt = 'Input     [1=images, 2=video]: ';
 im_vid = input(prompt);
@@ -134,15 +134,15 @@ if im_vid == 2
                 disp('mp4 as default');
             end
         end
-    
+
     videoList = dir(fullfile(input_folder, strcat('*.', video_format)));
     if length(videoList) > 1
         disp('Error: The INPUT folder must contain only one video at a time.')
         return
     end
-    
+
     [frame_rate] = video2frames(input_folder, video_format);
-    
+
 elseif im_vid == 1
     % SHINE_color: changed predifined format to user input
     prompt = 'Type the image format  [e.g., jpg, png]\n';
@@ -173,14 +173,14 @@ mode = 8;         % 1 = lumMatch only
 
 background = 300; % background lum of template, or 300=automatic (default)
                   % (automatically, the luminance that occurs most
-                  % frequently in the image is used as background lum); 
-                  % basically, all regions of that lum are treated as 
+                  % frequently in the image is used as background lum);
+                  % basically, all regions of that lum are treated as
                   % background
 
 rescaling = 1;    % 0 = no rescaling
                   % 1 = rescale absolute values (default)
                   % 2 = rescale average values
-                 
+
 optim = 0;        % 0 = no SSIM optimization
                   % 1 = SSIM optimization (Avanaki, 2009; to change the
                   % number if iterations (default = 10) and adjust step
@@ -212,9 +212,9 @@ if temp == 2
     if temp == 1
         while md ~= 1 && md ~= 2
             md = input('Luminance option [1=lumMatch, 2=histMatch]: ');
-            if md == 2  
+            if md == 2
                 while optim ~= 2 && optim ~= 3
-                optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');    
+                optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
                 end
                 optim = optim-2;
             elseif isempty(md) == 1
@@ -234,7 +234,7 @@ if temp == 2
         while md ~= 5 && md ~= 6 && md ~= 7 && md ~= 8
             md = 4+input('Matching of both [1=hist&sf, 2=hist&spec, 3=sf&hist, 4=spec&hist]: ');
                 while optim ~= 2 && optim ~= 3
-                optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');    
+                optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
                 end
                 optim = optim-2;
             if isempty(md) == 1
@@ -475,21 +475,21 @@ for im = 1:numim
         if nargin > 0
         % SHINE_color: rescale value channel from 0-255 to 0-1
         v_cell{im} = scale2v(images{im}); % SHINE_color: opened on the readImages function
-        
+
         % SHINE_color: create a hsv color image and transform to rgb
-        color_im = cat(3, hue_cell{im}, sat_cell{im}, v_cell{im}); 
+        color_im = cat(3, hue_cell{im}, sat_cell{im}, v_cell{im});
         color_im = hsv2rgb(color_im);
-       
+
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',num2str(im),'.tif'))); % SHINE_color: original command
             imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',num2str(im),'.tif'))); % SHINE_color: writing the colorful image
         else
             % SHINE_color: rescale value channel from 0-255 to 0-1
             v_cell{im} = scale2v(images{im}); %opened on the readImages function
-        
+
             % SHINE_color: create a hsv color image and transform to rgb
-            color_im = cat(3, hue_cell{im}, sat_cell{im}, v_cell{im}); 
+            color_im = cat(3, hue_cell{im}, sat_cell{im}, v_cell{im});
             color_im = hsv2rgb(color_im);
-            
+
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',imname{im}))); % SHINE_color: original command
             imwrite(color_im, fullfile(output_folder,strcat('SHINE_color_',imname{im}))); % SHINE_color: writing the colorful image
         end

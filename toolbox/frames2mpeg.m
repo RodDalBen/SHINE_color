@@ -1,12 +1,18 @@
-% frames2mpeg - create an mpeg video from images
-% This function is an adaptation of the imageFolder2mpeg function by 
+% frames2mpeg
+%
+% Create an mpeg video from images
+%
+% (c) Todd Karin
+%
+% This function is an adaptation of the imageFolder2mpeg function by
 % Todd Karin.
+%
 % The frame rate is now provided by the video2frames function, quality was
-% increased, and external player was turned off. 
-% April 2019, version 0.1.
+% increased, and external player was turned off.
+% SHINE_color, April 2019, version 0.1.
 % Rodrigo Dal Ben (dalbenwork@gmail.com)
 % ------------------------------------------------------------------------
-
+%
 % Todd Karin
 % IMAGEFOLDER2MPEG - create an mpeg video from images
 %
@@ -64,7 +70,7 @@
 % ------------------------------------------------------------------------
 % SHINE_color toolbox, April 2019, version 0.1
 % adapted by Rodrigo Dal Ben
-% 
+%
 % Frame rate is now provided by the original video.
 % The video files is renamed according to SHINE_color names.
 % The output directory is specified according to the SHINE_color output
@@ -82,7 +88,7 @@ end
 
 % Default param values
 frameRate = frame_rate; % SHINE_color: frame rate comes from the video2frame function.
-quality = 100; 
+quality = 100;
 numsToExportOn = 0;
 openInExternalPlayer = 0; % SHINE_color: external player off.
 movieFname = ['SHINE_color_video.mp4']; %SHINE_color: rename video.
@@ -110,12 +116,12 @@ for k = 1:2:length(paramPairs)
             error('Option not recognized')
     end
 end
-            
-            
+
+
 % Get all the file names in the folder
 fnames = getAllFilesInFolder(output_folder);
 N = length(fnames);
-disp(['Found ' num2str(N) ' images ']) 
+disp(['Found ' num2str(N) ' images '])
 
 
 % Set up video writer object
@@ -141,17 +147,17 @@ disp(['Percent Done (%)'   9  'Time Remaining (s)']);
 for j=numsToExport
 
     % Write the video
-    writeVideo(writerObj, imread(fullfile(output_folder, fnames{j})) );       
-    
+    writeVideo(writerObj, imread(fullfile(output_folder, fnames{j})) );
+
     % print out progress
     tnow=toc;
     if tnow>tlast+1
         tlast = tlast+.5;
         %disp(['Percent Done: ' num2str(100*j/N,'%2.2f') '%' 9 9 'Time Remaining: ' num2str(tnow/j*N-tnow,'%2.1f') ' s']);
         disp(['  ' num2str(100*j/N,'%2.2f') ' ' 9 9 '  ' num2str(tnow/j*N-tnow,'%2.1f') ]);
-    
+
     end
-    
+
 end
 
 disp([10 'Elapsed time for creating the video: ' num2str(toc,2) 's' 10]); %SHINE_color: explicitly says that the elapsed time is related to the video.
