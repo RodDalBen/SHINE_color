@@ -17,7 +17,7 @@ bibliography: paper.bib
 
 # Summary
 
-Pupil dilation responses can be used to investigate an array of cognitive abilities across the lifespan [@Hepach2016; @Sirois2014; @Zhang2019; @Zhang2019]. Whereas it is a versatile measure of high-level abilities, pupil dilation can be greatly affected by low-level properties of stimuli and experimental setting such as luminance of visual stimuli and experimental room [e.g., @Hepach2016; @Tsukahara2020].
+Pupil dilation responses can be used to investigate an array of cognitive abilities across the lifespan [@Hepach2016; @Sirois2014; @Zhang2019; @Zhao2019a]. Whereas it is a versatile measure of high-level abilities, pupil dilation can be greatly affected by low-level properties of stimuli and experimental setting such as luminance of visual stimuli and experimental room [e.g., @Hepach2016; @Tsukahara2020].
 
 One powerful way to control low-level properties of experimental stimuli is to use the SHINE toolbox for MATLAB [@Willenbockel2010]. This toolbox contains a set of functions that allows users to precisely specify luminance and contrast, histogram, and Fourier amplitude spectra of visual stimuli. These parametric manipulations minimize potential low-level confounds when investigating higher-level processes (e.g., cognitive effort, recognition). However, SHINE only works with greyscale images. Whereas this serves well to many research purposes [e.g., @Lawson2017; @Rodger2015], other research goals might benefit from colorful images [e.g., @Cheng2019; @Hepach2016; @Zhang2019]. Here, we describe the SHINE_color, an adaptation of SHINE that allow users to perform all operations from SHINE toolbox to colorful images.
 
