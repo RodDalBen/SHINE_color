@@ -1,0 +1,2 @@
+# ignore "00_untracked" folder
+00_untracked/
