@@ -25,9 +25,9 @@ For illustration purposes, the input folder contains 4 pictures from the NOUN da
 If you have no experience with MATLAB, just follow these steps (images available on the files tab of the [OSF project](https://osf.io/auzjy/)):
 
 1. Download/clone the `SHINE_color` & unzip it on the desired folder;
-2. Go into the SHINE_color/toolbox folder;
+2. Go into the SHINE_color/toolbox subfolder;
 3. Add the images/videos to be processed in the "SHINE_color_INPUT" folder;
-4. Open MATLAB and select the "SHINE_color/toolbox" folder;
+4. Open MATLAB and select the "SHINE_color" folder, then the "SHINE_color/toolbox" subfolder;
 5. Type "SHINE_color" (case sensitive);
 6. Follow the prompts and select the operations you would like;
 7. Once it is done (the sign ">>" is back on the editor), check the "SHINE_color_OUTPUT" folder. There you will find your processed images/videos and some statistics. Also check the input folder for pre-processing statistics.
