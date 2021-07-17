@@ -6,7 +6,7 @@ Please, send suggestions and doubts to <dalbenwork@gmail.com>
 
 ***
 
-Update, version 0.2:
+Update, version 0.0.2:
 
 The new version of the `SHINE_color` now handles video files. If a video file is provided, all frames will be extracted, `SHINE_color` operations will be performed on each frame, and the video will be re-created with the manipulated frames.
 
@@ -25,11 +25,12 @@ For illustration purposes, the input folder contains 4 pictures from the NOUN da
 If you have no experience with MATLAB, just follow these steps (images available on the files tab of the [OSF project](https://osf.io/auzjy/)):
 
 1. Download/clone the `SHINE_color` & unzip it on the desired folder;
-2. Add the images/videos to be processed in the "SHINE_color_INPUT" folder;
-3. Open MATLAB and select the "SHINE_color" folder;
-4. Type "SHINE_color" (case sensitive);
-5. Follow the prompts and select the operations you would like;
-6. Once it is done (the sign ">>" is back on the editor), check the "SHINE_color_OUTPUT" folder. There you will find your processed images/videos and some statistics. Also check the input folder for pre-processing statistics.
+2. Go into the SHINE_color/toolbox folder;
+3. Add the images/videos to be processed in the "SHINE_color_INPUT" folder;
+4. Open MATLAB and select the "SHINE_color/toolbox" folder;
+5. Type "SHINE_color" (case sensitive);
+6. Follow the prompts and select the operations you would like;
+7. Once it is done (the sign ">>" is back on the editor), check the "SHINE_color_OUTPUT" folder. There you will find your processed images/videos and some statistics. Also check the input folder for pre-processing statistics.
 
 ***
 
