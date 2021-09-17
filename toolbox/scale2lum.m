@@ -2,7 +2,7 @@
 %
 % Scale Value channel from 0-255 to hsv values (0-1).
 % ------------------------------------------------------------------------
-% SHINE_color toolbox, February 2019, version 0.1
+% SHINE_color toolbox, February 2019, version 0.0.1
 % (c) Rodrigo Dal Ben
 % ------------------------------------------------------------------------
 % Permission to use, copy, or modify this software and its documentation
@@ -17,11 +17,23 @@
 %
 % Kindly report any suggestions or corrections dalbenwork@gmail.com
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, September 2021, version 0.0.3
+% (c) Rodrigo Dal Ben
+%
+% - Scale L channel from 0-255 to CIELab values (0-100).
+% - Renamed the function from 'scale2v' to 'scale2lum' to account for both
+% colorspaces.
+% ------------------------------------------------------------------------
 
-function y = scale2v(x)
-if size(x,3)==1
+function y = scale2lum(x, cs)
+if size(x,3) == 1
     x = double(x);
-    y = (x/255);
+    if cs == 1 % hsv
+        y = (x/255);
+        
+    elseif cs == 2 % cielab
+        y = (x/2.55);
+    end
 else
     error('Input must be a value channel')
 end

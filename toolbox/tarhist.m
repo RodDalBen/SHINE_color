@@ -45,6 +45,11 @@
 %
 % Kindly report any suggestions or corrections to verena.vw@gmail.com
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, September 2021, version 0.0.3
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Replace 'rgb2gray' for 'lum2scale' function
+% ------------------------------------------------------------------------
 
 function target = tarhist(images,mask)
 
@@ -66,7 +71,7 @@ pixels = 0;
 [xs,ys] = size(images{1});
 for im = 1:numim
     if ndims(images{im}) == 3
-        images{im} = v2scale(images{im}); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+        images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
     end
     im1 = double(images{im});
     [xs1,ys1] = size(im1);

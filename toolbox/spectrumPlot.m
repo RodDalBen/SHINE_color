@@ -34,19 +34,36 @@
 %
 % Revision 1, 26/11/2010
 % - Output argument added; plot is now optional
+%
+% ------------------------------------------------------------------------
+% SHINE_color toolbox, September 2021, version 0.0.3
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Adapted for diagnostics plot. 
+% Added:
+%   - lum2scale functions
+%   - cs & diag input
+% ------------------------------------------------------------------------
 
-function imspec = spectrumPlot(im,qplot)
+function imspec = spectrumPlot(im, qplot, cs, diag)
 
 if nargin < 2
     qplot = true;
 end
 if ndims(im) == 3
-    im = v2scale(im); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+    im = lum2scale(im, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
 end
 imspec = abs(fftshift(fft2(double(im)))).^2;
 if qplot
-    [xs ys] = size(im);
-    f1 = -ys/2:ys/2-1;
-    f2 = -xs/2:xs/2-1;
-    figure;imagesc(f1,f2,log10(imspec)), axis xy, colormap gray
+    if diag % fig and labs are opened in diag
+        [xs ys] = size(im);
+        f1 = -ys/2:ys/2-1;
+        f2 = -xs/2:xs/2-1;
+        imagesc(f1,f2,log10(imspec)), axis xy, colormap gray
+    else
+        [xs ys] = size(im);
+        f1 = -ys/2:ys/2-1;
+        f2 = -xs/2:xs/2-1;
+        figure;imagesc(f1,f2,log10(imspec)), axis xy, colormap gray
+    end
 end

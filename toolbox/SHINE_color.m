@@ -59,7 +59,7 @@
 %
 % Kindly report any suggestions or corrections to verena.vw@gmail.com
 % ------------------------------------------------------------------------
-% SHINE_color toolbox, February 2019, version 0.1
+% SHINE_color toolbox, February 2019, version 0.0.1
 % adapted by Rodrigo Dal Ben
 %
 % Convert RGB images to HSV and apply SHINE toolbox functions to the
@@ -82,7 +82,7 @@
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
-% SHINE_color toolbox, April 2019, version 0.2
+% SHINE_color toolbox, April 2019, version 0.0.2
 % adapted by Rodrigo Dal Ben
 %
 % The toolbox now handles video files.
@@ -103,7 +103,24 @@
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
-
+% SHINE_color toolbox, September 2021, version 0.0.3
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Updates & improvements:
+% - Require selection to every prompt (except for prompts with default values);
+% - Require at least 2 images to advance;
+% - Fix the pooled SD calculation from 'lum_calc';
+% - Update 'lum_calc' output, now with a single pre vs. pos file;
+% - Add CIELab colorspace;
+% - Update functions' input to account for new colorspace (e.g., sfPlot, spectrumPlot); 
+% - 'v2scale' is now 'lum2scale';
+% - 'scale2v' is now 'scale2lum';
+% - Add 'DIAGNOSTICS' subfolder in 'SHINE_color_OUTPUT', for storing img stats and diag plots;
+% - Add a new function 'diag_plots' for img input;
+%
+% Kindly report any suggestions or corrections on the adaptations to
+% dalbenwork@gmail.com
+% ------------------------------------------------------------------------
 
 
 function images = SHINE_color(images,templ)
@@ -115,18 +132,38 @@ input_folder = fullfile(pwd, 'SHINE_color_INPUT'); % SHINE_color: changed from m
 output_folder = fullfile(pwd,'SHINE_color_OUTPUT'); % SHINE_color: changed from matlabroot to the current directory
 template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); % SHINE_color: changed from matlabroot to the current directory
 
+% SHINE_color: define some initial variables
+im_vid = 0; % image or video
+quitmsg = 'SHINE_color was quit.';
+cs = 0; % colorspace
+y_n_plot = 0; 
+
 % SHINE_color: start by selecting image or video processing:
-prompt = 'Input     [1=images, 2=video]: ';
-im_vid = input(prompt);
+while im_vid ~= 1 && im_vid ~= 2
+    prompt = 'Input     [1=images, 2=video]: ';
+    im_vid = input(prompt);
+    if isempty(im_vid) == 1 % RDB force a choice
+        disp(quitmsg)
+        return;
+    end 
+end
+
+y_n = 0;
 
 if im_vid == 2
+    while y_n ~= 1 && y_n ~= 2
     prompt = 'The INPUT folder contains only one video and the OUTPUT folder is empty? [1=yes, 2=no]: ';
     y_n = input(prompt);
+        if isempty(y_n) == 1 % RDB force a choice
+            disp(quitmsg)
+            return;
+        end 
+    end
         if y_n == 2
             disp('Error: the INPUT folder must contain only one video and the OUTPUT folder must be empty');
             return
         else
-            prompt = 'Type the video format     [e.g., mp4, avi]: ';
+            prompt = 'Type the video format    [e.g., mp4, avi]: ';
             video_format = input(prompt,'s');
             imformat = 'png';
             if isempty(video_format)
@@ -142,15 +179,40 @@ if im_vid == 2
     end
 
     [frame_rate] = video2frames(input_folder, video_format);
-
+    
+    while cs ~= 1 && cs ~= 2
+        cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab]: ');
+        if isempty(cs) == 1
+            disp(quitmsg);
+            return
+        end
+    end
+    
 elseif im_vid == 1
-    % SHINE_color: changed predifined format to user input
-    prompt = 'Type the image format  [e.g., jpg, png]\n';
+    % SHINE_color: changed predefined format to user input
+    prompt = 'Type the image format  [e.g., jpg, png]: ';
     imformat = input(prompt,'s');
     if isempty(imformat)
       imformat = 'jpg';
       disp('jpg as default');
     end
+    
+    while cs ~= 1 && cs ~= 2
+    cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab]: ');
+        if isempty(cs) == 1
+            disp(quitmsg);
+            return
+        end
+    end
+    
+    while y_n_plot ~= 1 && y_n_plot ~= 2
+    y_n_plot = input('Do you want diagnostic plots? (may take some time)    [1=yes, 2=no]: ');
+        if isempty(y_n_plot) == 1
+            disp(quitmsg);
+            return
+        end
+    end
+    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -188,7 +250,6 @@ optim = 0;        % 0 = no SSIM optimization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 temp = 0; md = 0; wim = 0; backg = 0;
-quitmsg = 'SHINE_color was quit.';
 
 while temp ~= 1 && temp ~= 2
     temp = input('SHINE_color options    [1=default, 2=custom]: ');
@@ -203,25 +264,30 @@ if temp == 2
 
     while temp ~= 1 && temp ~= 2 && temp ~= 3
         temp = input('Matching mode    [1=luminance, 2=spatial frequency, 3=both]: ');
-        if isempty(temp) == 1
+        if isempty(temp) == 1 
             disp(quitmsg)
             return;
         end
     end
-
+    
     if temp == 1
         while md ~= 1 && md ~= 2
             md = input('Luminance option [1=lumMatch, 2=histMatch]: ');
-            if md == 2
-                while optim ~= 2 && optim ~= 3
-                optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
-                end
-                optim = optim-2;
-            elseif isempty(md) == 1
+            if isempty(md) == 1 
                 disp(quitmsg)
                 return;
             end
+            if md == 2
+                while optim ~= 2 && optim ~= 3
+                optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
+                if isempty(optim) == 1 
+                    disp(quitmsg)
+                    return;
+                end 
+                end
+            end
         end
+        
     elseif temp == 2
         while md ~= 3 && md ~= 4
             md = 2+input('Spectrum options [1=sfMatch, 2=specMatch]: ');
@@ -230,23 +296,30 @@ if temp == 2
                 return;
             end
         end
+        
     elseif temp == 3
         while md ~= 5 && md ~= 6 && md ~= 7 && md ~= 8
             md = 4+input('Matching of both [1=hist&sf, 2=hist&spec, 3=sf&hist, 4=spec&hist]: ');
-                while optim ~= 2 && optim ~= 3
-                optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
-                end
-                optim = optim-2;
             if isempty(md) == 1
                 disp(quitmsg)
                 return;
-            end
-            it = input('# of iterations? ');
-            if isempty(it) == 1
+            end 
+        end
+        
+        while optim ~= 2 && optim ~= 3
+            optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
+            if isempty(optim) == 1
                 disp(quitmsg)
                 return;
             end
         end
+        optim = optim-2;
+            
+        it = input('# of iterations? ');
+        if isempty(it) == 1
+           disp('Will run 1 iteration.')
+        end
+                
     end
 
     mode = md;
@@ -313,8 +386,8 @@ end
 
 clear temp md wim backg
 
-if nargin == 0
-    [hue_cell, sat_cell, v_cell, images,numim,imname] = readImages(input_folder,imformat); % RDB added outputs for HSV channels
+if nargin == 0    
+    [channel1, channel2, channel3, images, numim, imname] = readImages(input_folder,imformat,cs); % RDB added outputs for HSV and CIELab channels
 else
     numim = max(size(images));
 end
@@ -323,8 +396,8 @@ disp(' ')
 disp(sprintf('Number of images: %d', numim));
 disp(' ')
 
-if numim == 0
-    error('No images found. Please check pathnames and file format.')
+if numim < 2 %== 0
+    error('At least 2 images are required. Please check pathnames and file format.') % RDB require at least 2 images
 end
 
 images_orig = images;
@@ -474,24 +547,46 @@ for im = 1:numim
     if nargout == 0
         if nargin > 0
         % SHINE_color: rescale value channel from 0-255 to 0-1
-        v_cell{im} = scale2v(images{im}); % SHINE_color: opened on the readImages function
-
-        % SHINE_color: create a hsv color image and transform to rgb
-        color_im = cat(3, hue_cell{im}, sat_cell{im}, v_cell{im});
-        color_im = hsv2rgb(color_im);
-
+            if cs == 1 % hsv
+                channel3{im} = scale2lum(images{im}, cs); % SHINE_color: opened on the readImages function
+            elseif cs == 2 % lab
+                channel1{im} = scale2lum(images{im}, cs); 
+            end
+            
+            % SHINE_color: create a color image (from hsv or cielab) and transform to rgb
+            color_im = cat(3, channel1{im}, channel2{im}, channel3{im});
+        
+            if cs == 1 % hsv
+                color_im = hsv2rgb(color_im);
+                cs_tag = 'hsv_';
+            elseif cs == 2 % lab
+                color_im = lab2rgb(color_im);
+                cs_tag = 'cielab_';
+            end
+        
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',num2str(im),'.tif'))); % SHINE_color: original command
-            imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',num2str(im),'.tif'))); % SHINE_color: writing the colorful image
+            imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.tif'))); % SHINE_color: writing the colorful image
         else
-            % SHINE_color: rescale value channel from 0-255 to 0-1
-            v_cell{im} = scale2v(images{im}); %opened on the readImages function
-
-            % SHINE_color: create a hsv color image and transform to rgb
-            color_im = cat(3, hue_cell{im}, sat_cell{im}, v_cell{im});
-            color_im = hsv2rgb(color_im);
+            if cs == 1 % hsv     
+                % SHINE_color: rescale value channel from 0-255 to 0-1
+                channel3{im} = scale2lum(images{im}, cs); %opened on the readImages function
+            elseif cs == 2 % lab
+                channel1{im} = scale2lum(images{im}, cs); %opened on the readImages function
+            end
+            
+            % SHINE_color: create a color image (from hsv or lab) and transform to rgb
+            color_im = cat(3, channel1{im}, channel2{im}, channel3{im});
+            
+            if cs == 1 % hsv
+                color_im = hsv2rgb(color_im);
+                cs_tag = 'hsv_';
+            elseif cs == 2 % lab
+                color_im = lab2rgb(color_im);
+                cs_tag = 'cielab_';
+            end
 
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',imname{im}))); % SHINE_color: original command
-            imwrite(color_im, fullfile(output_folder,strcat('SHINE_color_',imname{im}))); % SHINE_color: writing the colorful image
+            imwrite(color_im, fullfile(output_folder,strcat('SHINE_color_', cs_tag, imname{im}))); % SHINE_color: writing the colorful image
         end
     end
     rmsqe = getRMSE(images_orig{im},images{im});
@@ -500,7 +595,11 @@ for im = 1:numim
     mssim_all = mssim_all+mssim;
 end
 
-lum_calc(input_folder, output_folder, imformat); % SHINE_color: calculates the Value channel values of the original and new images
+% diagnostic statistics and plots
+lum_calc(input_folder, output_folder, imformat, cs); % SHINE_color: calculates the Value channel values of the original and new images
+if y_n_plot == 1
+    diag_plots(input_folder, output_folder, imformat, cs, mode); % SHINE_color: diagnostic plots
+end
 
 RMSE = rmsqe_all/numim;
 SSIM = mssim_all/numim;
@@ -510,9 +609,9 @@ disp(sprintf('RMSE:     %d',RMSE))
 disp(sprintf('SSIM:     %d',SSIM))
 
 if im_vid == 2
-    disp([10 'Re-creating video with new luminance.' 10]);
+    disp([10 'Progress: Re-creating video with new properties.' 10]);
     frames2mpeg(output_folder,frame_rate);
-    disp([10 'All done! See the OUTPUT folder for the new video, all individual frames, and their statistics.']);
+    disp([10 'Progress: New video in OUTPUT folder, statistics in OUTPUT/DIAGNOSTICS.']);
 end
 
 

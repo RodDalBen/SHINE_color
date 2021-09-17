@@ -41,6 +41,11 @@
 %
 % Kindly report any suggestions or corrections to verena.vw@gmail.com
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, September 2021, version 0.0.3
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Replace 'rgb2gray' for 'lum2scale' function
+% ------------------------------------------------------------------------
 
 function images = rescale(images,option)
 
@@ -57,7 +62,7 @@ brightests = zeros(numim,1);
 darkests = zeros(numim,1);
 for n = 1:numim
     if ndims(images{n}) == 3
-        images{n} = v2scale(images{n}); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+        images{n} = lum2scale(images{n}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
     end
     images{n} = double(images{n});
     brightests(n) = max(max(images{n}));

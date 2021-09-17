@@ -1,12 +1,26 @@
 ## SHINE_color
 
-Last update: April, 2019.
-
 Please, send suggestions and doubts to <dalbenwork@gmail.com>
 
 ***
 
-Update, version 0.0.2:
+Update, September, 2021, version 0.0.3: 
+
+Updates & improvements:
+- Require selection to every prompt (except for prompts with default values);
+- Require at least 2 images to advance;
+- Fix the pooled SD calculation from 'lum_calc';
+- Update 'lum_calc' output, now with a single pre vs. pos file;
+- Add CIELab colorspace;
+- Update functions' input to account for new colorspace (e.g., sfPlot, spectrumPlot); 
+- 'v2scale' is now 'lum2scale';
+- 'scale2v' is now 'scale2lum';
+- Add 'DIAGNOSTICS' subfolder in 'SHINE_color_OUTPUT', for storing img stats and diag plots;
+- Add a new function 'diag_plots' for img input;
+
+***
+
+Update, April, 2019, version 0.0.2:
 
 The new version of the `SHINE_color` now handles video files. If a video file is provided, all frames will be extracted, `SHINE_color` operations will be performed on each frame, and the video will be re-created with the manipulated frames.
 

@@ -46,6 +46,11 @@
 %
 % Kindly report any suggestions or corrections to verena.vw@gmail.com
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, September 2021, version 0.0.3
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Replace 'rgb2gray' for 'lum2scale' function
+% ------------------------------------------------------------------------
 
 function images = lumMatch(images,mask,lum)
 
@@ -68,7 +73,7 @@ if nargin == 1
     M = 0; S = 0;
     for im = 1:numim
         if ndims(images{im}) == 3
-            images{im} = v2scale(images{im}); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+            images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
         end
         M = M + mean2(images{im});
         S = S + std2(images{im});
@@ -88,7 +93,7 @@ elseif nargin == 2
     M = 0; S = 0;
     for im = 1:numim
         if ndims(images{im}) == 3
-           images{im} = v2scale(images{im}); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+           images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
         end
         im1 = images{im};
         if iscell(mask) == 1
@@ -120,7 +125,7 @@ elseif nargin == 3
     M = lum(1); S = lum(2);
     for im = 1:numim
         if ndims(images{im}) == 3
-            images{im} = v2scale(images{im}); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+            images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
         end
         im1 = double(images{im});
         if isempty(mask) == 1

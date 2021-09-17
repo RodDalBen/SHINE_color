@@ -37,11 +37,16 @@
 %
 % Kindly report any suggestions or corrections to verena.vw@gmail.com
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, September 2021, version 0.0.3
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Replace 'rgb2gray' for 'lum2scale' function
+% ------------------------------------------------------------------------
 
 function tim = match(im,target,mask)
 
 if ndims(im) == 3
-    im = v2scale(im); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+    im = lum2scale(im, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
 end
 tim = double(im);
 rand('seed',sum(100*clock));

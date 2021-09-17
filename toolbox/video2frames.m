@@ -1,8 +1,9 @@
+%
 % video2frames
 %
 % Extracts all frames from a video file and save them as .png images.
 % ------------------------------------------------------------------------
-% SHINE_color toolbox, February 2019, version 0.1
+% SHINE_color toolbox, February 2019, version 0.0.1
 % (c) Rodrigo Dal Ben
 % ------------------------------------------------------------------------
 % Permission to use, copy, or modify this software and its documentation
