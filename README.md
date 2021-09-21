@@ -4,19 +4,19 @@ Please, send suggestions and doubts to <dalbenwork@gmail.com>
 
 ***
 
-Update, September, 2021, version 0.0.3: 
+Update, September 2021, version 0.0.3:
 
 Updates & improvements:
-- Require selection to every prompt (except for prompts with default values);
-- Require at least 2 images to advance;
+- Require input to every prompt (except for prompts with default values);
+- When dealing with images, require at least 2 images to advance;
 - Fix the pooled SD calculation from 'lum_calc';
-- Update 'lum_calc' output, now with a single pre vs. pos file;
-- Add CIELab colorspace;
-- Update functions' input to account for new colorspace (e.g., sfPlot, spectrumPlot); 
+- Update 'lum_calc' output, now with pre vs. pos summary in a single file;
+- Add option for CIELab colorspace;
+- Update functions' input to account for new colorspace (e.g., sfPlot, spectrumPlot);
 - 'v2scale' is now 'lum2scale';
 - 'scale2v' is now 'scale2lum';
 - Add 'DIAGNOSTICS' subfolder in 'SHINE_color_OUTPUT', for storing img stats and diag plots;
-- Add a new function 'diag_plots' for img input;
+- Add a new function 'diag_plots' for diagnostic plots of operations with images.
 
 ***
 
@@ -50,7 +50,7 @@ If you have no experience with MATLAB, just follow these steps (images available
 
 References
 
-Dal Ben, R. (2019). SHINE color and Lum_fun: A set of tools to control luminance of colorful images (Version 0.2). [Computer program]. doi: 10.17605/OSF.IO/AUZJY, retrieved from https://osf.io/auzjy/
+Dal Ben, R. (2021). SHINE_color and Lum_fun: A set of tools to control luminance of colorful images (Version 0.0.3). [Computer program]. doi: 10.17605/OSF.IO/AUZJY, retrieved from https://osf.io/auzjy/
 
 The original SHINE toolbox is available at: http://www.mapageweb.umontreal.ca/gosselif/SHINE/
 
