@@ -63,7 +63,7 @@ Table 1. Overview of the functions from SHINE_color. Most functions come from th
 |     tarhist                  |     computes a target   histogram                                                                      |
 |     video2frames**           |     extracts all frames   from a video                                                                 |
 
-![An example of the histogram matching by SHINE_color. On the left there are images (from pexels), luminance histograms, and summary statistics before the operation. On the right, we have the same elements after the operation.\label{fig:Figure 2}](fig2.png)
+![An example of the histogram matching by SHINE_color using the HSV color space. On the left there are images (from pexels), luminance histograms, and summary statistics before the operation. On the right, we have the same elements after the operation.\label{fig:Figure 2}](fig2.png)
 
 The SHINE_color toolbox is openly available at [OSF](https://osf.io/auzjy/) and [GitHub](https://github.com/RodDalBen/SHINE_color). Plans for future development include a MATLAB guided user interface and an adaptation to Python language, for integration with experimental packages such as PsychoPy [@Peirce2019]. The control of low-level properties of visual stimuli is an essential step for minimizing experimental confounds, such as those that might affect pupil dilation responses [@Hepach2016; @Sirois2014; @Tsukahara2020]. SHINE_color allow users to take full advantage of the powerful functions from the SHINE toolbox [@Willenbockel2010] for controlling low-level properties of colorful images and videos.
 
