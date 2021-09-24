@@ -22,16 +22,15 @@ output_folder_diagnostics = fullfile(pwd,'SHINE_color_OUTPUT', 'DIAGNOSTICS');
 md = mode;
 
 % set initial msg
-if md ~= 1
+if md == 1
+    disp('Progress: diag_plots not available for luminance match');
+    return
+else
     disp('Progress: diag_plots in progress, please wait');
 end
 
 % set mode for 2 graphs
-if md == 2
-    md2 = md;
-elseif md == 3
-    md2 = md;
-elseif md == 4
+if md == 2 || md == 3 || md == 4
     md2 = md;
 elseif md == 5 || md == 7
     md2 = [2, 3];  % histogram + sf
@@ -67,6 +66,7 @@ for z = 1:numim
     
 end
 
+% set number of figures
 if md ~= 1
     for h = 1:nummd
         if nummd == 2
@@ -78,7 +78,7 @@ if md ~= 1
         fig.Position = [100 100 numim*320 numim*180]; % [x y width height] full HD proportions
     
         for i = 1:numim
-            subplot(numim, 2, j(i)), % 2 img per line (numim/2), 2 columns, variable position
+            sp(i) = subplot(numim, 2, j(i)); % 2 img per line (numim/2), 2 columns, variable position
             if md == 2
                 plot_name = '_histogram_pre_pos';
                 % for a bar plot with thicker bars, uncomment next 2 lines and comment 'imhist'
@@ -86,31 +86,25 @@ if md ~= 1
                 %bar(grayLevels, counts, 'BarWidth', 5),
                 imhist(lum_img1{i});
                 title(src_input(i).name, 'FontSize', 8)
-                ylim([0 inf])
-                xlim([-10 266]) % ensure that extreme values are visible
             elseif md == 3
                 plot_name = '_spatial_freq_pre_pos';
                 sfPlot(img1{i}, true, cs, true); 
                 title(src_input(i).name, 'FontSize', 8)
-                ylim([-inf inf])
-                xlim([-inf inf])                          
             elseif md == 4
                 plot_name = '_spectrum_pre_pos';
                 spectrumPlot(img1{i}, true, cs, true); 
-                title(src_input(i).name, 'FontSize', 8)
-                ylim([-inf inf])
-                xlim([-inf inf])                     
+                title(src_input(i).name, 'FontSize', 8)                     
             end
+            % set axis limits
+            axis(sp(i), 'tight');
             
             for l = 2:2:numim*2
-                subplot(numim, 2, k(i))
+                sp(i+1) = subplot(numim, 2, k(i));
                 if md == 2
                     %[counts, grayLevels] = imhist(lum_img2{i}, 256);
                     %bar(grayLevels, counts, 'BarWidth', 5),
                     imhist(lum_img2{i});
                     title(strcat(cs_tag, '-', src_input(i).name), 'FontSize', 8) % cs + same index
-                    ylim([0 inf])
-                    xlim([-10 266]) 
                     
                     % common labs and title
                     labs = axes(fig,'visible','off'); 
@@ -123,9 +117,7 @@ if md ~= 1
                 elseif md == 3         
                     sfPlot(img2{i}, true, cs, true);
                     title(strcat(cs_tag, '-', src_input(i).name), 'FontSize', 8)
-                    ylim([-inf inf])
-                    xlim([-inf inf])
-                
+
                     % common labs and title
                     labs = axes(fig,'visible','off'); 
                     labs.Title.Visible='on';
@@ -137,8 +129,6 @@ if md ~= 1
                 elseif md == 4
                     spectrumPlot(img2{i}, true, cs, true); 
                     title(strcat(cs_tag, '-', src_input(i).name), 'FontSize', 8)
-                    ylim([-inf inf])
-                    xlim([-inf inf])
                     
                     % common labs and title
                     labs = axes(fig,'visible','off'); 
@@ -149,12 +139,15 @@ if md ~= 1
                     ylabel(labs,{'Amplitude', ''}); 
                     xlabel(labs,{'','Amplitude'});
                 end
+                % set axis limits
+                axis(sp(i+1), 'tight');
+                % link axes
+                linkaxes(sp,'xy');
             end
         end
         % save plot
         saveas(fig, fullfile(output_folder_diagnostics, strcat(cs_tag, plot_name)),'png')
     end
-%end
 
 % final msgs
 if mode == 2
