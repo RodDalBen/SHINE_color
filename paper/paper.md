@@ -15,19 +15,6 @@ date: 21 June 2021
 bibliography: paper.bib
 ---
 
-<!--
-- Detailed flowchart: https://osf.io/uxqtv/
-- add flowchart - DONE
-- Upd table with functions; - DONE
-- Upd text to reflect v0.0.3 upds; - DONE
-- Add Figure showing how the images change (like SHINE), w/ diag_plot; - DONE
-- Fix reviewers suggestions; - DONE
-- delete PDF from repo; - DONE
-- clean toolbox folder;
-- commit changes to diag_plot;
--->
-
-
 # Summary
 
 Some experiments require precise control of visual stimuli properties to avoid experimental confounds (e.g., pupillometry studies). Here we describe an adapted MATLAB toolbox for controlling low-level properties of colorful images.
