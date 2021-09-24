@@ -31,7 +31,7 @@ The SHINE_color toolbox works in an intuitive way (\autoref{fig:Figure 1}; compl
 
 Finally, for both images and videos, the mean and standard deviation of the luminance channel before and after manipulations are calculated for all images or frames. These statistics provide a quick summary of the modifications in luminance and are stored in a `.txt` file in the folder `SHINE_color_OUTPUT/DIAGNOSTICS`. In addition, for images, users can choose to plot diagnostic plots (luminance histogram, spatial frequency, or spectrum) to compare luminance properties before and after manipulations.
 
-![SHINE_color condensed flowchart. Functions (rounded rectangle) and decisions (diamonds) with dashed borders are unique introduced by SHINE_color (e.g., `video2frames`, `lum2scale`, `scale2lum`, `lum_calc`, `diag_plot`, `frames2mpeg`). They allow SHINE operations to be performed on colorful images.\label{fig:Figure 1}](fig1.png)
+![SHINE_color condensed flowchart. Functions (rounded rectangle) and decisions (diamonds) with dashed borders are introduced by SHINE_color (e.g., `video2frames`, `lum2scale`, `scale2lum`, `lum_calc`, `diag_plot`, `frames2mpeg`). They allow SHINE operations to be performed on colorful images.\label{fig:Figure 1}](fig1.png)
 
 Table 1. Overview of the functions from SHINE_color. Most functions come from the SHINE toolbox, and their descriptions are also available on @Willenbockel2010. Single stars (\*) denotes functions that have been adapted from SHINE, double stars (\**) indicates new functions from SHINE_color. Functions are listed in alphabetical order.
 
