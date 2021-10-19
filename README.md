@@ -4,6 +4,14 @@ Please, send suggestions and doubts to <dalbenwork@gmail.com>
 
 ***
 
+Update, October 2021, version 0.0.4:
+
+Updates & improvements:
+- `lum_calc` is calculated directly from the input and output luminance channel. Previous versions re-read rgb images, transformed it to hsv or CIELab, and then calculated statistics. The new function is more accurate and faster;
+- `diag_plots` plots luminance information directly from the input and output luminance channel. The previous versions re-read rgb images, transformed it to hsv or CIELab, and then plotted the luminance information. The new function is more accurate and faster.
+
+***
+
 Update, September 2021, version 0.0.3:
 
 Updates & improvements:
