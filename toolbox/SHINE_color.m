@@ -121,6 +121,15 @@
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, October 2021, version 0.0.4
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Updates & improvements:
+% - Updates on lum_calc & diag_plots functions;
+%
+% Kindly report any suggestions or corrections on the adaptations to
+% dalbenwork@gmail.com
+% ------------------------------------------------------------------------
 
 
 function images = SHINE_color(images,templ)
@@ -546,7 +555,7 @@ mssim_all = 0;
 for im = 1:numim
     if nargout == 0
         if nargin > 0
-        % SHINE_color: rescale value channel from 0-255 to 0-1
+        % SHINE_color: rescale value channel from 0-255 to 0-1 (HSV) or 0-100 (CIELab)
             if cs == 1 % hsv
                 channel3{im} = scale2lum(images{im}, cs); % SHINE_color: opened on the readImages function
             elseif cs == 2 % lab
@@ -595,10 +604,10 @@ for im = 1:numim
     mssim_all = mssim_all+mssim;
 end
 
-% diagnostic statistics and plots
-lum_calc(input_folder, output_folder, imformat, cs); % SHINE_color: calculates the Value channel values of the original and new images
+lum_calc(images_orig, images, imname, cs); % SHINE_color: calculates the luminance of the original and manipulated images
+
 if y_n_plot == 1
-    diag_plots(input_folder, output_folder, imformat, cs, mode); % SHINE_color: diagnostic plots
+    diag_plots(images_orig, images, imname, cs, mode); % SHINE_color: diagnostic plots
 end
 
 RMSE = rmsqe_all/numim;

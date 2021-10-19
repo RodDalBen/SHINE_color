@@ -33,36 +33,34 @@
 % - Update progress msg;
 % - Update input for 'lum2scale' function
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, October 2021, version 0.0.4
+% (c) Rodrigo Dal Ben
+%
+% - Calculations are now done directly on the manipulated channels (pre and
+% pos). Previous versions re-read & transformed rgb images;
+% - Luminace is calculated and reported in greyscale (0-255).
+% ------------------------------------------------------------------------
 
 
-function lum_calc (input_folder, output_folder, imformat, cs)
-%% Initial setup
-% Set input and output source and name pattern
-src_input = dir(fullfile(strcat(input_folder, filesep, '*.', imformat))); 
-src_output = dir(fullfile(strcat(output_folder, filesep, '*.', imformat)));
+function lum_calc (images_orig, images, imname, cs)
+% Set output folder
 output_folder_diagnostics = fullfile(pwd,'SHINE_color_OUTPUT', 'DIAGNOSTICS');
 
 % Set number of im
-numim = length(src_input);
+numim = length(images_orig);
 
-% Opening the output .txt
+% Set tag based on color space
 if cs == 1 % hsv
     cs_tag = 'hsv_'; % colorspace tag
 elseif cs == 2 % lab
     cs_tag = 'cielab_';
 end
 
+% Open output .txt
 statistics_pre_pos = fopen([output_folder_diagnostics filesep strcat(cs_tag, 'img_stats_pre_pos.txt')], 'wt');
 
 % Setting data structure
 fprintf(statistics_pre_pos, 'Img_pre\tMean_pre\tSD_pre\tImg_pos\tMean_pos\tSD_pos\n');
-
-% Setting initial Img
-img1 = [];
-
-% Setting initital number of hsv and lab imgs
-n_pre = 0;
-n_pos = 0;
 
 % Setting initial mean and standard deviation
 M_pre = 0;
@@ -72,76 +70,48 @@ M_pos = 0;
 Sd_pos = 0;
 
 for i = 1:numim
-   % load images
-   file_name1 = strcat(input_folder, filesep, src_input(i).name); 
-   I1 = imread(file_name1);
-       %figure,imshow(I1); % To check if imgs have been loaded properly delete the "%" mark
-   
-   file_name2 = strcat(output_folder, filesep, src_output(i).name); 
-   I2 = imread(file_name2);
-       %figure,imshow(I2); % To check if imgs have been loaded properly delete the "%" mark
-   
-   if cs == 1 % hsv
-       % from rbg to hsv
-       im_pre = rgb2hsv(I1);
-       im_pos = rgb2hsv(I2);
-   
-       % defining channels
-       lum1 = im_pre(:,:,3);  
-       lum2 = im_pos(:,:,3); 
-        
-   elseif cs == 2 % lab
-       % from rbg to cielab
-       im_pre = rgb2lab(I1);
-       im_pos = rgb2lab(I2);
-   
-       % defining channels
-       lum1 = im_pre(:,:,1);  
-       lum2 = im_pos(:,:,1); 
-   end
   
-    % Recording indiviudal means and sds
-    m1 = mean2(lum1);
-    m2 = mean2(lum2);
+   % Recording indiviudal means and sds
+   m1 = mean2(images_orig{i});
+   m2 = mean2(images{i});
    
-   sd1 = std2(lum1);
-   sd2 = std2(lum2);
+   sd1 = std2(images_orig{i});
+   sd2 = std2(images{i});
    
-   % Updating img name
-   img1 = src_input(i).name;
-   img2 = src_output(i).name;
+   % Saving img name
+   img1 = imname{i};
+   img2 = strcat(cs_tag, imname{i});
    
-   % Registering hsv and lab values
+   % Saving luminance values
    fprintf(statistics_pre_pos, '%s\t%.4f\t%.4f\t%s\t%.4f\t%.4f\n', img1, m1, sd1, img2, m2, sd2);
    
-   n_pre = n_pre + 1; % updates the number of hsv files
-   n_pos = n_pos + 1;
-   
-   M_pre = M_pre + m1; % sum of the mean of each iteration of hsv files
+   M_pre = M_pre + m1; % sum the mean of each iteration
    M_pos = M_pos + m2;
    
-   Sd_pre = Sd_pre + sd1^2; % sum of the sd of each iteration of hsv files
+   Sd_pre = Sd_pre + sd1^2; % sum & square the sd of each iteration
    Sd_pos = Sd_pos + sd2^2;
       
 end
       
-% pooled mean and sd
+% Pooled mean and sd
 M_pre = M_pre/numim; 
 M_pos = M_pos/numim; 
 
-% pooled sd: sqrt(sum(SD1^2 + SD2^2 ...)/N) ; SDs are squared and summed in for loop
+% Pooled sd: sqrt(sum(SD1^2 + SD2^2 ...)/N;
 Sd_pre = sqrt(Sd_pre/numim); 
 Sd_pos = sqrt(Sd_pos/numim); 
 
-% Redifining img
+% Img name
 img1 = 'Pooled';
 img2 = 'Pooled';
 
-% Recording the overall mean and sd
+% Save the overall mean and sd
 fprintf(statistics_pre_pos, '%s\t%.4f\t%.4f\t%s\t%.4f\t%.4f', img1, M_pre, Sd_pre, img2, M_pos, Sd_pos);
 
-fclose('all'); % close all open .txt
+% Close all open .txt
+fclose('all'); 
 
+% Display progress msg on Command window
 disp('Progress: lum_calc sucessful') 
 disp('Progress: summary stats are in OUTPUT/DIAGNOSTICS');
 
