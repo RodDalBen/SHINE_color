@@ -1,0 +1,8 @@
+# extra and test files
+00_untracked/*
+
+# OS files
+**.DS_Store
+
+# Preprint working version
+paper/DalBen_shine_color_preprint.md

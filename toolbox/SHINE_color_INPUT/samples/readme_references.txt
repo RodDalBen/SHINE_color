@@ -11,6 +11,4 @@ If you are using any of the NOUN images, please cite the database:
 
 Horst, J. S., & Hout, M. C. (2016). The Novel Object and Unusual Name (NOUN) Database: A collection of novel images for use in experimental research. Behavior Research Methods, 48(4), 1393Ð1409.Êhttp://doi.org/10.3758/s13428-015-0647-3
 
-
-
-
+Cat images (1, 2, 3) come from www.pexels.com
