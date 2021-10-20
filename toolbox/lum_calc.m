@@ -37,7 +37,7 @@
 % (c) Rodrigo Dal Ben
 %
 % - Calculations are now done directly on the manipulated channels (pre and
-% pos). Previous versions re-read & transformed rgb images;
+% post). Previous versions re-read & transformed rgb images;
 % - Luminace is calculated and reported in greyscale (0-255).
 % ------------------------------------------------------------------------
 
@@ -57,17 +57,17 @@ elseif cs == 2 % lab
 end
 
 % Open output .txt
-statistics_pre_pos = fopen([output_folder_diagnostics filesep strcat(cs_tag, 'img_stats_pre_pos.txt')], 'wt');
+statistics_pre_post = fopen([output_folder_diagnostics filesep strcat(cs_tag, 'img_stats_pre_post.txt')], 'wt');
 
 % Setting data structure
-fprintf(statistics_pre_pos, 'Img_pre\tMean_pre\tSD_pre\tImg_pos\tMean_pos\tSD_pos\n');
+fprintf(statistics_pre_post, 'Img_pre\tMean_pre\tSD_pre\tImg_post\tMean_post\tSD_post\n');
 
 % Setting initial mean and standard deviation
 M_pre = 0;
 Sd_pre = 0;
 
-M_pos = 0;
-Sd_pos = 0;
+M_post = 0;
+Sd_post = 0;
 
 for i = 1:numim
   
@@ -83,30 +83,30 @@ for i = 1:numim
    img2 = strcat(cs_tag, imname{i});
    
    % Saving luminance values
-   fprintf(statistics_pre_pos, '%s\t%.4f\t%.4f\t%s\t%.4f\t%.4f\n', img1, m1, sd1, img2, m2, sd2);
+   fprintf(statistics_pre_post, '%s\t%.4f\t%.4f\t%s\t%.4f\t%.4f\n', img1, m1, sd1, img2, m2, sd2);
    
    M_pre = M_pre + m1; % sum the mean of each iteration
-   M_pos = M_pos + m2;
+   M_post = M_post + m2;
    
    Sd_pre = Sd_pre + sd1^2; % sum & square the sd of each iteration
-   Sd_pos = Sd_pos + sd2^2;
+   Sd_post = Sd_post + sd2^2;
       
 end
       
 % Pooled mean and sd
 M_pre = M_pre/numim; 
-M_pos = M_pos/numim; 
+M_post = M_post/numim; 
 
 % Pooled sd: sqrt(sum(SD1^2 + SD2^2 ...)/N;
 Sd_pre = sqrt(Sd_pre/numim); 
-Sd_pos = sqrt(Sd_pos/numim); 
+Sd_post = sqrt(Sd_post/numim); 
 
 % Img name
 img1 = 'Pooled';
 img2 = 'Pooled';
 
 % Save the overall mean and sd
-fprintf(statistics_pre_pos, '%s\t%.4f\t%.4f\t%s\t%.4f\t%.4f', img1, M_pre, Sd_pre, img2, M_pos, Sd_pos);
+fprintf(statistics_pre_post, '%s\t%.4f\t%.4f\t%s\t%.4f\t%.4f', img1, M_pre, Sd_pre, img2, M_post, Sd_post);
 
 % Close all open .txt
 fclose('all'); 

@@ -14,7 +14,7 @@
 % (c) Rodrigo Dal Ben
 %
 % - Plots are now done directly on the manipulated channels (pre and
-% pos). The previous version re-read & transformed rgb images.
+% post). The previous version re-read & transformed rgb images.
 % ------------------------------------------------------------------------
 
 function diag_plots(images_orig, images, imname, cs, mode)
@@ -69,7 +69,7 @@ if md ~= 1
         for i = 1:numim
             sp(i) = subplot(numim, 2, j(i)); % 2 img per line (numim/2), 2 columns, variable position
             if md == 2
-                plot_name = '_histogram_pre_pos';
+                plot_name = '_histogram_pre_post';
                 % for a bar plot with thicker bars, uncomment next 2 lines and comment 'imhist'
                 %[counts, grayLevels] = imhist(images_orig{i}, 256);
                 %bar(grayLevels, counts, 'BarWidth', 5),
@@ -77,12 +77,12 @@ if md ~= 1
                 title(imname{i}, 'FontSize', 8);
             
             elseif md == 3
-                plot_name = '_spatial_freq_pre_pos';
+                plot_name = '_spatial_freq_pre_post';
                 sfPlot(images_orig{i}, true, cs, true); 
                 title(imname{i}, 'FontSize', 8)
             
             elseif md == 4
-                plot_name = '_spectrum_pre_pos';
+                plot_name = '_spectrum_pre_post';
                 spectrumPlot(images_orig{i}, true, cs, true); 
                 title(imname{i}, 'FontSize', 8)                     
             end
@@ -101,7 +101,7 @@ if md ~= 1
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel','Pre vs. Pos', ''}); % avoid overlay
+                    title(labs, {'Luminance channel','Pre vs. Post', ''}); % avoid overlay
                     ylabel(labs,{'Number of Pixels', ''});
                     xlabel(labs,{'','Grayscale Luminance (0-255)'});  
                     
@@ -113,7 +113,7 @@ if md ~= 1
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel', 'Pre vs. Pos', ''});
+                    title(labs, {'Luminance channel', 'Pre vs. Post', ''});
                     ylabel(labs,{'Energy', ''});
                     xlabel(labs,{'','Spatial frequency (cycles/image)'});
                 
@@ -125,7 +125,7 @@ if md ~= 1
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel', 'Pre vs. Pos', ''});
+                    title(labs, {'Luminance channel', 'Pre vs. Post', ''});
                     ylabel(labs,{'Amplitude', ''}); 
                     xlabel(labs,{'','Amplitude'});
                 end
