@@ -623,6 +623,8 @@ if im_vid == 2
     disp([10 'Progress: New video in OUTPUT folder, statistics in OUTPUT/DIAGNOSTICS.']);
 end
 
+disp(' ')
+disp('All done, please remember to check your Monitor calibration to ensure proper luminance display.')
 
 if nargout < 1
     clear images
