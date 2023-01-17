@@ -49,7 +49,11 @@
 % Convert RGB to CIELab, and scale the Luminance (channel 1) (v2scale).
 % Extracts a (channel 2) and b (channel 3) for later concatenation. 
 % ------------------------------------------------------------------------
-
+% SHINE_color toolbox, September 2022, version 0.0.5
+% adapted by Rodrigo Dal Ben
+%
+% Extract RGB channels when using this colorspace. 
+% ------------------------------------------------------------------------
 
 function [channel1, channel2, channel3, ims, nim, imname] = readImages(pathname, imformat, cs)
 
@@ -57,9 +61,11 @@ all_images = dir(fullfile(pathname,strcat('*.',imformat)));
 nim = length(all_images);
 ims = cell(nim,1);
 
-channel1 = cell(nim,1); % stores hue (hsv) or luminance (lab)
-channel2 = cell(nim,1); % stores saturation (hsv) or a (lab)
-channel3 = cell(nim,1); % stores value (hsv) or b (lab)
+channel1 = cell(nim,1); % SHINE_color: stores hue (hsv), luminance (lab), red channel (rgb)
+channel2 = cell(nim,1); % SHINE_color: stores saturation (hsv), a (lab), green channel (rgb)
+channel3 = cell(nim,1); % SHINE_color: stores value (hsv), b (lab), blue channel (rgb)
+
+rgb_channels = cell(nim, 3); % SHINE_color: cell to store rgb channels
 
 imname = cell(nim,1); % define imname
 
@@ -86,6 +92,17 @@ for im = 1:nim
         
         channel2{im} = a; % stores a channel
         channel3{im} = b; % stores b channel
+        
+    elseif cs == 3 % rgb
+        channel1{im} = im1(:,:,1); % red channel
+        channel2{im} = im1(:,:,2); % green channel
+        channel3{im} = im1(:,:,3); % blue channel
+                
+        % keep all channels in a single cell {row, column}, each img in one row
+        rgb_channels{im, 1} = channel1{im};
+        rgb_channels{im, 2} = channel2{im};
+        rgb_channels{im, 3} = channel3{im};
+        
     end
     
     imname{im} = all_images(im).name; % SHINE_color: define imname
@@ -98,9 +115,15 @@ for im = 1:nim
         
     elseif strcmp(info.ColorType(1:4),'true')==1
         
-        im1 = lum2scale(im1, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
-        ims{im} = im1; % SHINE_color: storing scaled Value channel
-              
+        % SHINE_color: differentiate between cells with a single dimension (hsv and
+        % cielab) and cells with three dimensions (rgb)
+        if cs == 1 || cs == 2
+            im1 = lum2scale(im1, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+            ims{im} = im1; % SHINE_color: storing scaled Value channel
+        elseif cs == 3
+            ims = rgb_channels; % SHINE_color: rgb extracted channels as a cell {n, 3}
+        end
+        
         if nargout == 3
             imname{im} = all_images(im).name;
         end

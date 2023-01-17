@@ -51,13 +51,28 @@
 %
 % Replace 'rgb2gray' for 'lum2scale' function
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, September 2022, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Add cs as input info.
+% Add iteration for rgb cells - TO-DO
+% ------------------------------------------------------------------------
 
-function images = lumMatch(images,mask,lum)
+function images = lumMatch(images,mask,lum) 
 
+% GET CS INFO HERE! OTHERWISE IT WILL BREAK
+% TEST IMG DIME - NOT GETTING THE CORRECT DIMENSIONS FROM readImages
+img_cols = size(images, 2)
+img_rows = size(images, 1)
+%cs
+
+% SHINE_color: make sure we have the correct transformations from readImages
 if iscell(images) == 0
     error('The input must be a cell.')
-elseif min(size(images)>1)
+elseif min(size(images)>1)% && cs ~= 3 % SHINE_color: hsv or cielab colorspaces
     error('The input cell must be of size 1 x numim or numim x 1.')
+%elseif min(size(images, 2)<3) && cs == 3 % SHINE_color: rgb colorspace by column 
+%    error('The input cell must be of size numim x 3.')
 end
 
 if nargin > 1
@@ -69,26 +84,43 @@ if nargin > 1
 end
 
 numim = max(size(images));
+numcols = max(size(images, 2)); % SHINE_color: column index
 if nargin == 1
-    M = 0; S = 0;
-    for im = 1:numim
-        if ndims(images{im}) == 3
-            images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+    M = 0; 
+    S = 0;
+  
+    % TEST INTERACTION 
+    for j = 1:numcols % SHINE_color: iterate between columns (1 if hsv or cielab, 3 if rgb)
+        
+       % if cs == 3 % TEST!! 
+       %     images = images(:,j)           
+       % end
+        
+        
+        for im = 1:numim
+           %if ndims(images{im}) == 3 % SHINE_color: readImages should take care of this   CONSIDER DELETING IT! THIS IS IMPORTANT IF THE USER IMPORT RGB DIRECTLY, WITHOU USING READIMAGES, FORCE USE OF READIMAGES?        
+            %    images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+            %end
+            M = M + mean2(images{im});
+            S = S + std2(images{im});
         end
-        M = M + mean2(images{im});
-        S = S + std2(images{im});
-    end
-    M = M/numim;
-    S = S/numim;
-    for im = 1:numim
-        im1 = double(images{im});
-        if std2(im1)~=0
-            im1 = (im1-mean2(im1))/std2(im1)*S+M;
-        else
-            im1(:,:) = M;
+        M = M/numim;
+        S = S/numim;
+        
+        for im = 1:numim
+            im1 = double(images{im});
+            if std2(im1)~=0
+                im1 = (im1-mean2(im1))/std2(im1)*S+M;
+            else
+                im1(:,:) = M;
+            end
+            images{im, j} = uint8(im1); % SHINE_color: save output in respective column TEST!! 
         end
-        images{im} = uint8(im1);
-    end
+    
+        
+        
+    end % TEMP TEST
+    
 elseif nargin == 2
     M = 0; S = 0;
     for im = 1:numim
@@ -125,7 +157,7 @@ elseif nargin == 3
     M = lum(1); S = lum(2);
     for im = 1:numim
         if ndims(images{im}) == 3
-            images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+            images{im} = lum2scale(images{im});%, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
         end
         im1 = double(images{im});
         if isempty(mask) == 1

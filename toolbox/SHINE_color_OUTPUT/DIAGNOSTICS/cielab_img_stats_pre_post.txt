@@ -1,0 +1,5 @@
+Img_pre	Mean_pre	SD_pre	Img_post	Mean_post	SD_post
+cat1.jpg	135.5270	47.2060	cielab_cat1.jpg	110.6638	58.0038
+cat2.jpg	73.5047	65.4058	cielab_cat2.jpg	108.9785	61.6867
+cat3.jpg	117.9530	72.4945	cielab_cat3.jpg	108.9991	61.7063
+Pooled	108.9949	62.6146	Pooled	109.5472	60.4907

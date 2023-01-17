@@ -130,6 +130,19 @@
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, September 2022, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Updates & improvements:
+% - Updates on diag_plots;
+% - Add manipulation directly on RGB channels:
+% -- RGB added as a cs option (SHINE_color);
+% -- RGB channels stored as a cell array (readImages);
+% -- Iterate between rgb channels (lumMatch, ADD.............)
+%
+% Kindly report any suggestions or corrections on the adaptations to
+% dalbenwork@gmail.com
+% ------------------------------------------------------------------------
 
 
 function images = SHINE_color(images,templ)
@@ -189,8 +202,8 @@ if im_vid == 2
 
     [frame_rate] = video2frames(input_folder, video_format);
     
-    while cs ~= 1 && cs ~= 2
-        cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab]: ');
+    while cs ~= 1 && cs ~= 2 && cs ~= 3
+        cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
         if isempty(cs) == 1
             disp(quitmsg);
             return
@@ -206,8 +219,8 @@ elseif im_vid == 1
       disp('jpg as default');
     end
     
-    while cs ~= 1 && cs ~= 2
-    cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab]: ');
+    while cs ~= 1 && cs ~= 2 && cs ~= 3
+    cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
         if isempty(cs) == 1
             disp(quitmsg);
             return
@@ -401,6 +414,11 @@ else
     numim = max(size(images));
 end
 
+% TEST IMG DIME - NOT GETTING THE CORRECT DIMENSIONS FROM SHINE
+img_cols = size(images, 2)
+img_rows = size(images, 1)
+%%%%%
+
 disp(' ')
 disp(sprintf('Number of images: %d', numim));
 disp(' ')
@@ -409,7 +427,7 @@ if numim < 2 %== 0
     error('At least 2 images are required. Please check pathnames and file format.') % RDB require at least 2 images
 end
 
-images_orig = images;
+images_orig = images; % SHINE_color: copy of original images for future calculations
 
 switch wholeIm
     case 2
@@ -512,12 +530,12 @@ for iteration = 1:it
     switch mode
         case 1
             if wholeIm == 1
-                images = lumMatch(images);
+                images = lumMatch(images); 
             else
                 images = lumMatch(images,mask_fgr);
                 images = lumMatch(images,mask_bgr);
             end
-            disp('Progress: lumMatch successful')
+            disp('Progress: lumMatch successful')                
         case {2, 5, 6}
             if wholeIm == 1
                 images = histMatch(images,optim);
@@ -562,15 +580,18 @@ for im = 1:numim
                 channel1{im} = scale2lum(images{im}, cs); 
             end
             
-            % SHINE_color: create a color image (from hsv or cielab) and transform to rgb
+            % SHINE_color: create a color image (from hsv, cielab, or rgb)
             color_im = cat(3, channel1{im}, channel2{im}, channel3{im});
         
+            % SHINE_color: transform hsv or cielab to rgb
             if cs == 1 % hsv
                 color_im = hsv2rgb(color_im);
                 cs_tag = 'hsv_';
             elseif cs == 2 % lab
                 color_im = lab2rgb(color_im);
                 cs_tag = 'cielab_';
+            elseif cs == 3 % rgb 
+                cs_tag = 'rgb_';                
             end
         
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',num2str(im),'.tif'))); % SHINE_color: original command
@@ -583,15 +604,18 @@ for im = 1:numim
                 channel1{im} = scale2lum(images{im}, cs); %opened on the readImages function
             end
             
-            % SHINE_color: create a color image (from hsv or lab) and transform to rgb
+            % SHINE_color: create a color image (from hsv, lab, or rgb)
             color_im = cat(3, channel1{im}, channel2{im}, channel3{im});
             
+            % SHINE_color: transform hsv or cielab to rgb
             if cs == 1 % hsv
                 color_im = hsv2rgb(color_im);
                 cs_tag = 'hsv_';
             elseif cs == 2 % lab
                 color_im = lab2rgb(color_im);
                 cs_tag = 'cielab_';
+            elseif cs == 3 % rgb
+                cs_tag = 'rgb_';
             end
 
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',imname{im}))); % SHINE_color: original command
@@ -625,6 +649,14 @@ end
 
 disp(' ')
 disp('All done, please remember to check your Monitor calibration to ensure proper luminance display.')
+disp(' ')
+fprintf(['Please cite: \n',...
+    'Dal Ben, R. (2021, July 5). SHINE_color: controlling low-level properties of colorful images. \n',...
+    'PsyArXiv: https://doi.org/10.31234/osf.io/fec6x \n',...
+    '\n',...
+    'Willenbockel, V., Sadr, J., Fiset, D., Horne, G. O., Gosselin, F., & Tanaka, J. W. (2010).\n',...
+    'Controlling low-level image properties: The SHINE toolbox.\n',... 
+    'Behavior Research Methods, 42(3), 671?684. http://doi.org/10.3758/BRM.42.3.671\n'])
 
 if nargout < 1
     clear images

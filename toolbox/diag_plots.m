@@ -16,6 +16,12 @@
 % - Plots are now done directly on the manipulated channels (pre and
 % post). The previous version re-read & transformed rgb images.
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, August 2022, version 0.0.5
+% (c) Rodrigo Dal Ben
+%
+% - Display luminance statistics (mean and standard deviation) on plots.
+% ------------------------------------------------------------------------
+
 
 function diag_plots(images_orig, images, imname, cs, mode)
 
@@ -74,8 +80,12 @@ if md ~= 1
                 %[counts, grayLevels] = imhist(images_orig{i}, 256);
                 %bar(grayLevels, counts, 'BarWidth', 5),
                 imhist(images_orig{i});
-                title(imname{i}, 'FontSize', 8);
-            
+                title(imname{i}, 'FontSize', 8);              
+                % luminance statistics 
+                text(0.4, 0.85, sprintf('M = %d, SD = %d',...
+                    round(mean2(images_orig{i})), round(std2(images_orig{i}))),...
+                    'Units', 'normalized', 'FontSize', 8);
+  
             elseif md == 3
                 plot_name = '_spatial_freq_pre_post';
                 sfPlot(images_orig{i}, true, cs, true); 
@@ -96,6 +106,10 @@ if md ~= 1
                     %bar(grayLevels, counts, 'BarWidth', 5),
                     imhist(images{i});
                     title(strcat(cs_tag, '-', imname{i}), 'FontSize', 8);
+                    % luminance statistics 
+                    text(0.4, 0.85, sprintf('M = %d, SD = %d',...
+                    round(mean2(images{i})), round(std2(images{i}))),...
+                    'Units', 'normalized', 'FontSize', 8);
                     % common labs and title
                     labs = axes(fig,'visible','off'); 
                     labs.Title.Visible='on';

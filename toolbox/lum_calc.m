@@ -71,7 +71,7 @@ Sd_post = 0;
 
 for i = 1:numim
   
-   % Recording indiviudal means and sds
+   % Recording individual means and sds
    m1 = mean2(images_orig{i});
    m2 = mean2(images{i});
    
