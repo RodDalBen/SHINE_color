@@ -51,7 +51,7 @@ if nargin < 2
     qplot = true;
 end
 if ndims(im) == 3
-    im = lum2scale(im, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+    im = lum2scale(im, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
 end
 imspec = abs(fftshift(fft2(double(im)))).^2;
 if qplot

@@ -53,7 +53,7 @@
 function [mask_fgr,mask_bgr,background] = separate(image,fig,background)
 
 if ndims(image) == 3
-    image = lum2scale(image, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+    image = lum2scale(image, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
 end
 if nargin < 3 || background > 255 || background < 0
     background = image(find(max(imhist(image))));

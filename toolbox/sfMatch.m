@@ -72,7 +72,7 @@ angs = zeros(xs,ys,numim);
 mags = zeros(xs,ys,numim);
 for im = 1:numim
     if ndims(images{im}) == 3
-        images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+        images{im} = lum2scale(images{im}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
     end
     im1 = double(images{im})/255;
     [xs1,ys1] = size(im1);

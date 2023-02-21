@@ -1,5 +1,0 @@
-Img_pre	Mean_pre	SD_pre	Img_post	Mean_post	SD_post
-cat1.jpg	172.4798	44.7292	hsv_cat1.jpg	129.1301	56.4854
-cat2.jpg	80.3405	68.0713	hsv_cat2.jpg	126.5129	62.7855
-cat3.jpg	127.2612	76.7630	hsv_cat3.jpg	126.7055	63.1977
-Pooled	126.6939	64.6193	Pooled	127.4495	60.9004

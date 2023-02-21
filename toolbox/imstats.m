@@ -80,7 +80,7 @@ histMat = zeros(256,numim);
 
 for im = 1:numim
     if ndims(images{im}) == 3
-        im1 = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+        im1 = lum2scale(images{im}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
     else
         im1 = images{im};
     end

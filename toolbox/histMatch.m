@@ -85,7 +85,7 @@ if nargin < 4
     targ = hist2list(hist);
     for ix = 1:numims
         if ndims(images{ix}) == 3
-            images{ix} = lum2scale(images{ix}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+            images{ix} = lum2scale(images{ix}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
         end
         if optim == 1
             X = images{ix};
@@ -112,7 +112,7 @@ else
     end
     for ix = 1:numims
         if ndims(images{ix}) == 3
-            images{ix} = lum2scale(images{ix}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+            images{ix} = lum2scale(images{ix}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
         end
         if iscell(mask)==1
             m = mask{ix};

@@ -66,7 +66,7 @@ numim = max(size(images));
 pixels = 0;
 for im = 1:numim
     if ndims(images{im}) == 3
-        images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+        images{im} = lum2scale(images{im}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
     end
     im1 = images{im};
     if nargin > 1

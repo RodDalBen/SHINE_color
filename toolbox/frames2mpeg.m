@@ -75,6 +75,7 @@
 % The video files is renamed according to SHINE_color names.
 % The output directory is specified according to the SHINE_color output
 % folder.
+% ------------------------------------------------------------------------
 
 
 function frames2mpeg(output_folder,frame_rate,varargin)
@@ -125,7 +126,7 @@ disp(['Found ' num2str(N) ' images '])
 
 
 % Set up video writer object
-writerObj = VideoWriter(fullfile(output_folder, movieFname),'MPEG-4'); %SHINE_color: output directory specified.
+writerObj = VideoWriter(fullfile(output_folder, movieFname),'MPEG-4'); % SHINE_color: output directory specified.
 set(writerObj,'FrameRate',frameRate,...
     'Quality',quality)
 
@@ -160,7 +161,7 @@ for j=numsToExport
 
 end
 
-disp([10 'Elapsed time for creating the video: ' num2str(toc,2) 's' 10]); %SHINE_color: explicitly says that the elapsed time is related to the video.
+disp([10 'Elapsed time for creating the video: ' num2str(toc,2) 's' 10]); % SHINE_color: explicitly says that the elapsed time is related to the video.
 close(writerObj);
 
 if openInExternalPlayer

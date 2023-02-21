@@ -51,10 +51,10 @@
 %
 % Replace 'rgb2gray' for 'lum2scale' function
 % ------------------------------------------------------------------------
-% SHINE_color toolbox, September 2022, version 0.0.5
+% SHINE_color toolbox, March 2023, version 0.0.5
 % (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
 %
-% Add cs as input info.
+% Add cs as input info. - TO-DO
 % Add iteration for rgb cells - TO-DO
 % ------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ img_cols = size(images, 2)
 img_rows = size(images, 1)
 %cs
 
-% SHINE_color: make sure we have the correct transformations from readImages
+% SHINE_color: double check transformations from readImages
 if iscell(images) == 0
     error('The input must be a cell.')
 elseif min(size(images)>1)% && cs ~= 3 % SHINE_color: hsv or cielab colorspaces
@@ -125,7 +125,7 @@ elseif nargin == 2
     M = 0; S = 0;
     for im = 1:numim
         if ndims(images{im}) == 3
-           images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+           images{im} = lum2scale(images{im}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
         end
         im1 = images{im};
         if iscell(mask) == 1
@@ -157,7 +157,7 @@ elseif nargin == 3
     M = lum(1); S = lum(2);
     for im = 1:numim
         if ndims(images{im}) == 3
-            images{im} = lum2scale(images{im});%, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+            images{im} = lum2scale(images{im});%, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
         end
         im1 = double(images{im});
         if isempty(mask) == 1

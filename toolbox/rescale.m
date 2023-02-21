@@ -62,7 +62,7 @@ brightests = zeros(numim,1);
 darkests = zeros(numim,1);
 for n = 1:numim
     if ndims(images{n}) == 3
-        images{n} = lum2scale(images{n}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+        images{n} = lum2scale(images{n}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
     end
     images{n} = double(images{n});
     brightests(n) = max(max(images{n}));

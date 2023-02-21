@@ -130,12 +130,12 @@
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
-% SHINE_color toolbox, September 2022, version 0.0.5
+% SHINE_color toolbox, March 2023, version 0.0.5
 % (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
 %
-% Updates & improvements:
-% - Updates on diag_plots;
-% - Add manipulation directly on RGB channels:
+% Updates & improvements: TO-DO
+% - Updates on diag_plots; (TO-DO)
+% - Add manipulation directly on RGB channels: (TO-DO)
 % -- RGB added as a cs option (SHINE_color);
 % -- RGB channels stored as a cell array (readImages);
 % -- Iterate between rgb channels (lumMatch, ADD.............)
@@ -150,21 +150,21 @@ function images = SHINE_color(images,templ)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Specify the image format and the input/output directories here if SHINE
 % is called without input or output arguments:
-input_folder = fullfile(pwd, 'SHINE_color_INPUT'); % SHINE_color: changed from matlabroot to the current directory
-output_folder = fullfile(pwd,'SHINE_color_OUTPUT'); % SHINE_color: changed from matlabroot to the current directory
-template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); % SHINE_color: changed from matlabroot to the current directory
+input_folder = fullfile(pwd, 'SHINE_color_INPUT'); % SHINE_color: input folder in the current dir
+output_folder = fullfile(pwd,'SHINE_color_OUTPUT'); % SHINE_color: output folder in the current dir
+template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); % SHINE_color: template folder in the current dir
 
-% SHINE_color: define some initial variables
-im_vid = 0; % image or video
-quitmsg = 'SHINE_color was quit.';
-cs = 0; % colorspace
-y_n_plot = 0; 
+% SHINE_color: define initial values for:
+im_vid = 0; % SHINE_color: static image or video
+quitmsg = 'SHINE_color was quit.'; % SHINE_color: quit std message
+cs = 0; % SHINE_color: colorspace to be used
+y_n_plot = 0; % SHINE_color: to plot manipulations or not
 
 % SHINE_color: start by selecting image or video processing:
 while im_vid ~= 1 && im_vid ~= 2
     prompt = 'Input     [1=images, 2=video]: ';
     im_vid = input(prompt);
-    if isempty(im_vid) == 1 % RDB force a choice
+    if isempty(im_vid) == 1 % SHINE_color: forced choice
         disp(quitmsg)
         return;
     end 
@@ -176,7 +176,7 @@ if im_vid == 2
     while y_n ~= 1 && y_n ~= 2
     prompt = 'The INPUT folder contains only one video and the OUTPUT folder is empty? [1=yes, 2=no]: ';
     y_n = input(prompt);
-        if isempty(y_n) == 1 % RDB force a choice
+        if isempty(y_n) == 1 % SHINE_color: forced choice
             disp(quitmsg)
             return;
         end 
@@ -211,7 +211,8 @@ if im_vid == 2
     end
     
 elseif im_vid == 1
-    % SHINE_color: changed predefined format to user input
+    
+    % SHINE_color: user input on img format
     prompt = 'Type the image format  [e.g., jpg, png]: ';
     imformat = input(prompt,'s');
     if isempty(imformat)
@@ -408,23 +409,27 @@ end
 
 clear temp md wim backg
 
-if nargin == 0    
-    [channel1, channel2, channel3, images, numim, imname] = readImages(input_folder,imformat,cs); % RDB added outputs for HSV and CIELab channels
+if nargin == 0
+    % SHINE_color: store channel information as a function of colorspace
+    % (e.g., H, S, V, or R, G, B)
+    [channel1, channel2, channel3, images, numim, imname] = readImages(input_folder,imformat,cs); 
 else
     numim = max(size(images));
 end
 
-% TEST IMG DIME - NOT GETTING THE CORRECT DIMENSIONS FROM SHINE
-img_cols = size(images, 2)
-img_rows = size(images, 1)
+
+%%%%%
+% SHINE_color: TEST IMG DIMENSIONS NOT GETTING THE CORRECT DIMENSIONS FROM SHINE
+%img_cols = size(images, 2)
+%img_rows = size(images, 1)
 %%%%%
 
 disp(' ')
 disp(sprintf('Number of images: %d', numim));
 disp(' ')
 
-if numim < 2 %== 0
-    error('At least 2 images are required. Please check pathnames and file format.') % RDB require at least 2 images
+if numim < 2
+    error('At least 2 images are required. Please check pathnames and file format.') % SHINE_color: >= 2 images required
 end
 
 images_orig = images; % SHINE_color: copy of original images for future calculations
@@ -563,27 +568,35 @@ for iteration = 1:it
             end
             disp('Progress: histMatch successful')
     end
-    % To save the result after each iteration
-    %save(fullfile(output_folder,sprintf('SHINE_color_d_%d_it',iteration)),'images') % SHINE_color: altered the output folder name
+    % SHINE_color: uncomment next line to save each iteration's result
+    % to output folder
+    %save(fullfile(output_folder,sprintf('SHINE_color_d_%d_it',iteration)),'images')
 end
-
 
 rmsqe_all = 0;
 mssim_all = 0;
+
 for im = 1:numim
     if nargout == 0
+        
+        %%%%%
+        % Do we need the `if else` here? Same commands on both parts, maybe
+        % just have as the only way in the code? Any safeguards for having
+        % it here? 
+        %%%%%
+        
         if nargin > 0
         % SHINE_color: rescale value channel from 0-255 to 0-1 (HSV) or 0-100 (CIELab)
-            if cs == 1 % hsv
-                channel3{im} = scale2lum(images{im}, cs); % SHINE_color: opened on the readImages function
-            elseif cs == 2 % lab
-                channel1{im} = scale2lum(images{im}, cs); 
+            if cs == 1 % SHINE_color: HSV
+                channel3{im} = scale2lum(images{im}, cs); % SHINE_color: channel created on readImages.m
+            elseif cs == 2 % SHINE_color: CIELab
+                channel1{im} = scale2lum(images{im}, cs); % SHINE_color: channel created on readImages.m
             end
             
-            % SHINE_color: create a color image (from hsv, cielab, or rgb)
+            % SHINE_color: create a color image (from HSV, CIELab, or RGB)
             color_im = cat(3, channel1{im}, channel2{im}, channel3{im});
         
-            % SHINE_color: transform hsv or cielab to rgb
+            % SHINE_color: transform HSV or CIELab to RGB and create label
             if cs == 1 % hsv
                 color_im = hsv2rgb(color_im);
                 cs_tag = 'hsv_';
@@ -594,17 +607,21 @@ for im = 1:numim
                 cs_tag = 'rgb_';                
             end
         
-            %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',num2str(im),'.tif'))); % SHINE_color: original command
-            imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.tif'))); % SHINE_color: writing the colorful image
+            % SHINE_color: SHINE original command, deprecated
+            %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',num2str(im),'.tif'))); 
+            
+            % SHINE_color: writing the colorful image
+            imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.tif'))); 
+            
         else
-            if cs == 1 % hsv     
-                % SHINE_color: rescale value channel from 0-255 to 0-1
-                channel3{im} = scale2lum(images{im}, cs); %opened on the readImages function
-            elseif cs == 2 % lab
-                channel1{im} = scale2lum(images{im}, cs); %opened on the readImages function
+            % SHINE_color: rescale value channel (V or L)
+            if cs == 1 % SHINE_color: HSV (0-255 to 0-1)
+                channel3{im} = scale2lum(images{im}, cs); % SHINE_color: channel created on readImages.m
+            elseif cs == 2 % SHINE_color: CIELab (0-255 to 0-100)
+                channel1{im} = scale2lum(images{im}, cs); % SHINE_color: channel created on readImages.m
             end
             
-            % SHINE_color: create a color image (from hsv, lab, or rgb)
+            % SHINE_color: create a color image (from HSV, CIELab, or RGB)
             color_im = cat(3, channel1{im}, channel2{im}, channel3{im});
             
             % SHINE_color: transform hsv or cielab to rgb
@@ -628,7 +645,7 @@ for im = 1:numim
     mssim_all = mssim_all+mssim;
 end
 
-lum_calc(images_orig, images, imname, cs); % SHINE_color: calculates the luminance of the original and manipulated images
+lum_calc(images_orig, images, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
 
 if y_n_plot == 1
     diag_plots(images_orig, images, imname, cs, mode); % SHINE_color: diagnostic plots
@@ -650,7 +667,11 @@ end
 disp(' ')
 disp('All done, please remember to check your Monitor calibration to ensure proper luminance display.')
 disp(' ')
-fprintf(['Please cite: \n',...
+
+% SHINE_color: display citation info. 
+%%%%% Should we add License info? Match GitHub
+
+fprintf(['Please cite: \n',... 
     'Dal Ben, R. (2021, July 5). SHINE_color: controlling low-level properties of colorful images. \n',...
     'PsyArXiv: https://doi.org/10.31234/osf.io/fec6x \n',...
     '\n',...

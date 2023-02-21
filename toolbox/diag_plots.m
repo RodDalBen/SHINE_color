@@ -19,7 +19,10 @@
 % SHINE_color toolbox, August 2022, version 0.0.5
 % (c) Rodrigo Dal Ben
 %
-% - Display luminance statistics (mean and standard deviation) on plots.
+% - Display luminance statistics (mean and standard deviation) on plots. -
+% TO-DO
+% - ADD one plot per each channel of the RGB; 6 columns vs. 2 columns
+% (actual)
 % ------------------------------------------------------------------------
 
 

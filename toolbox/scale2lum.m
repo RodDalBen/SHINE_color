@@ -28,10 +28,10 @@
 function y = scale2lum(x, cs)
 if size(x,3) == 1
     x = double(x);
-    if cs == 1 % hsv
+    if cs == 1 % HSV
         y = (x/255);
         
-    elseif cs == 2 % cielab
+    elseif cs == 2 % CIELab
         y = (x/2.55);
     end
 else

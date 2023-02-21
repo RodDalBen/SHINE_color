@@ -46,7 +46,7 @@
 function tim = match(im,target,mask)
 
 if ndims(im) == 3
-    im = lum2scale(im, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
+    im = lum2scale(im, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
 end
 tim = double(im);
 rand('seed',sum(100*clock));
