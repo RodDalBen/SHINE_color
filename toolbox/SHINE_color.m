@@ -145,7 +145,63 @@
 % ------------------------------------------------------------------------
 
 
-function images = SHINE_color(images,templ)
+function images = SHINE_color(inputpath, outputpath, extension, cs, im_vid, plots)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% If desired, the default values can be changed here:
+
+it = 1;           % number of iterations (default = 1)
+
+wholeIm = 1;      % 1 = whole image (default)
+                  % 2 = figure-ground separated (input images as templates)
+                  % 3 = figure-ground separated (based on templates)
+
+mode = 8;         % 1 = lumMatch only
+                  % 2 = histMatch only
+                  % 3 = sfMatch only
+                  % 4 = specMatch only
+                  % 5 = histMatch & sfMatch
+                  % 6 = histMatch & specMatch
+                  % 7 = sfMatch & histMatch
+                  % 8 = specMatch & histMatch (default)
+
+background = 300; % background lum of template, or 300=automatic (default)
+                  % (automatically, the luminance that occurs most
+                  % frequently in the image is used as background lum);
+                  % basically, all regions of that lum are treated as
+                  % background
+
+rescaling = 1;    % 0 = no rescaling
+                  % 1 = rescale absolute values (default)
+                  % 2 = rescale average values
+
+optim = 0;        % 0 = no SSIM optimization
+                  % 1 = SSIM optimization (Avanaki, 2009; to change the
+                  % number if iterations (default = 10) and adjust step
+                  % size (default = 67), see histMatch.m)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+if nargin ~= 0
+    %numim = max(size(images));
+    
+    if im_vid == 2
+        video_format = extension;
+        [frame_rate] = video2frames(inputpath, video_format);
+        [channel1, channel2, channel3, images, numim, imname] = readImages(inputpath,'png',cs,im_vid); 
+    else
+        imformat = extension;
+        [channel1, channel2, channel3, images, numim, imname] = readImages(inputpath,imformat,cs); 
+        
+    end
+    
+    if nargin < 6 || im_vid == 2
+        y_n_plot = 2;
+    end
+    output_folder = outputpath;
+    
+else
+    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Specify the image format and the input/output directories here if SHINE
@@ -200,7 +256,7 @@ if im_vid == 2
         return
     end
 
-    [frame_rate] = video2frames(input_folder, video_format);
+    [frame_rate, numim] = video2frames(input_folder, video_format);
     
     while cs ~= 1 && cs ~= 2 && cs ~= 3
         cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
@@ -238,40 +294,7 @@ elseif im_vid == 1
     
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% If desired, the default values can be changed here:
-
-it = 1;           % number of iterations (default = 1)
-
-wholeIm = 1;      % 1 = whole image (default)
-                  % 2 = figure-ground separated (input images as templates)
-                  % 3 = figure-ground separated (based on templates)
-
-mode = 8;         % 1 = lumMatch only
-                  % 2 = histMatch only
-                  % 3 = sfMatch only
-                  % 4 = specMatch only
-                  % 5 = histMatch & sfMatch
-                  % 6 = histMatch & specMatch
-                  % 7 = sfMatch & histMatch
-                  % 8 = specMatch & histMatch (default)
-
-background = 300; % background lum of template, or 300=automatic (default)
-                  % (automatically, the luminance that occurs most
-                  % frequently in the image is used as background lum);
-                  % basically, all regions of that lum are treated as
-                  % background
-
-rescaling = 1;    % 0 = no rescaling
-                  % 1 = rescale absolute values (default)
-                  % 2 = rescale average values
-
-optim = 0;        % 0 = no SSIM optimization
-                  % 1 = SSIM optimization (Avanaki, 2009; to change the
-                  % number if iterations (default = 10) and adjust step
-                  % size (default = 67), see histMatch.m)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%Default values here
 temp = 0; md = 0; wim = 0; backg = 0;
 
 while temp ~= 1 && temp ~= 2
@@ -409,13 +432,12 @@ end
 
 clear temp md wim backg
 
-if nargin == 0
     % SHINE_color: store channel information as a function of colorspace
     % (e.g., H, S, V, or R, G, B)
-    [channel1, channel2, channel3, images, numim, imname] = readImages(input_folder,imformat,cs); 
-else
-    numim = max(size(images));
+[channel1, channel2, channel3, images, numim, imname] = readImages(input_folder,imformat,cs); 
+
 end
+
 
 
 %%%%%
@@ -611,7 +633,7 @@ for im = 1:numim
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',num2str(im),'.tif'))); 
             
             % SHINE_color: writing the colorful image
-            imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.tif'))); 
+            imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.png'))); 
             
         else
             % SHINE_color: rescale value channel (V or L)

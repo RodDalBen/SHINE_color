@@ -19,7 +19,7 @@
 % Kindly report any suggestions or corrections dalbenwork@gmail.com
 % ------------------------------------------------------------------------
 
-function frame_rate = video2frames(input_folder, video_format)
+function [frame_rate] = video2frames(input_folder, video_format)
 
 videoList = dir(fullfile(input_folder, strcat('*.', video_format)));
 

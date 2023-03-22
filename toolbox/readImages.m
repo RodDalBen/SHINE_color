@@ -55,9 +55,14 @@
 % Extract RGB channels when selecting this colorspace. 
 % ------------------------------------------------------------------------
 
-function [channel1, channel2, channel3, ims, nim, imname] = readImages(pathname, imformat, cs)
+function [channel1, channel2, channel3, ims, nim, imname] = readImages(pathname, imformat, cs, im_vid)
 
-all_images = dir(fullfile(pathname,strcat('*.',imformat)));
+if im_vid == 2
+    all_images = dir(fullfile(pathname,strcat('*.',imformat))); %todo: read only integer-named files
+else
+    all_images = dir(fullfile(pathname,strcat('*.',imformat)));
+end
+
 nim = length(all_images);
 ims = cell(nim,1);
 
@@ -134,4 +139,5 @@ for im = 1:nim
         error('Please convert all images to grayscale. Some of your images might be indexed images.')
     end
 end
+
 
