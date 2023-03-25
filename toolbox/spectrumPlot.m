@@ -44,14 +44,16 @@
 %   - lum2scale functions
 %   - cs & diag input
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Remove transformations, all is done under readImages
+% ------------------------------------------------------------------------
 
-function imspec = spectrumPlot(im, qplot, cs, diag)
+function imspec = spectrumPlot(im, qplot, diag)
 
 if nargin < 2
     qplot = true;
-end
-if ndims(im) == 3
-    im = lum2scale(im, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
 end
 imspec = abs(fftshift(fft2(double(im)))).^2;
 if qplot

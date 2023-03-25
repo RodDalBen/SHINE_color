@@ -58,6 +58,11 @@
 %
 % Replace 'rgb2gray' for 'lum2scale' function
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Remove transformations, all is done under readImages
+% ------------------------------------------------------------------------
 
 function newimages = histMatch(images,optim,hist,mask)
 
@@ -84,9 +89,6 @@ if nargin < 4
     end
     targ = hist2list(hist);
     for ix = 1:numims
-        if ndims(images{ix}) == 3
-            images{ix} = lum2scale(images{ix}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
-        end
         if optim == 1
             X = images{ix};
             M = numel(images{ix});
@@ -111,9 +113,6 @@ else
         error('The size of the input cells must be equal.')
     end
     for ix = 1:numims
-        if ndims(images{ix}) == 3
-            images{ix} = lum2scale(images{ix}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
-        end
         if iscell(mask)==1
             m = mask{ix};
         end

@@ -24,6 +24,13 @@
 % - ADD one plot per each channel of the RGB; 6 columns vs. 2 columns
 % (actual)
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5 - TODO!
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Remove cs from:
+% - sfPlot
+% - 
+% ------------------------------------------------------------------------
 
 
 function diag_plots(images_orig, images, imname, cs, mode)
@@ -91,12 +98,12 @@ if md ~= 1
   
             elseif md == 3
                 plot_name = '_spatial_freq_pre_post';
-                sfPlot(images_orig{i}, true, cs, true); 
+                sfPlot(images_orig{i}, true, true); 
                 title(imname{i}, 'FontSize', 8)
             
             elseif md == 4
                 plot_name = '_spectrum_pre_post';
-                spectrumPlot(images_orig{i}, true, cs, true); 
+                spectrumPlot(images_orig{i}, true, true); 
                 title(imname{i}, 'FontSize', 8)                     
             end
             % set axis limits
@@ -123,7 +130,7 @@ if md ~= 1
                     xlabel(labs,{'','Grayscale Luminance (0-255)'});  
                     
                 elseif md == 3         
-                    sfPlot(images{i}, true, cs, true);
+                    sfPlot(images{i}, true, true);
                     title(strcat(cs_tag, '-', imname{i}), 'FontSize', 8)
                     % common labs and title
                     labs = axes(fig,'visible','off'); 
@@ -135,7 +142,7 @@ if md ~= 1
                     xlabel(labs,{'','Spatial frequency (cycles/image)'});
                 
                 elseif md == 4
-                    spectrumPlot(images{i}, true, cs, true); 
+                    spectrumPlot(images{i}, true, true); 
                     title(strcat(cs_tag, '-', imname{i}), 'FontSize', 8)
                     % common labs and title
                     labs = axes(fig,'visible','off'); 

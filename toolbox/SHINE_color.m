@@ -133,7 +133,9 @@
 % SHINE_color toolbox, March 2023, version 0.0.5
 % (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
 %
-% Updates & improvements: TO-DO
+% Updates & improvements:
+% - Functional command line call for images and videos, all input is read by readImages; DONE! 
+% - Remove transformation within individual functions; TO-DO
 % - Updates on diag_plots; (TO-DO)
 % - Add manipulation directly on RGB channels: (TO-DO)
 % -- RGB added as a cs option (SHINE_color);
@@ -147,6 +149,7 @@
 
 function images = SHINE_color(inputpath, outputpath, extension, cs, im_vid, plots)
 
+% SHINE_color: default values for call from command line
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % If desired, the default values can be changed here:
 
@@ -181,29 +184,32 @@ optim = 0;        % 0 = no SSIM optimization
                   % size (default = 67), see histMatch.m)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+% SHINE_color: differentiating between call on command line or wizard
+% SHINE_color: if command line
 if nargin ~= 0
-    %numim = max(size(images));
+    if nargin < 6
+        y_n_plot = 2;
+    else
+        y_n_plot = plots;
+    end
     
-    if im_vid == 2
+    if im_vid == 2 % SHINE_color: if a video is provided
         video_format = extension;
         [frame_rate] = video2frames(inputpath, video_format);
-        [channel1, channel2, channel3, images, numim, imname] = readImages(inputpath,'png',cs,im_vid); 
+        [channel1, channel2, channel3, images, numim, imname] = readImages(inputpath,'png',cs,im_vid);
+        y_n_plot = 2;
     else
         imformat = extension;
-        [channel1, channel2, channel3, images, numim, imname] = readImages(inputpath,imformat,cs); 
-        
+        [channel1, channel2, channel3, images, numim, imname] = readImages(inputpath,imformat,cs,im_vid); 
     end
     
-    if nargin < 6 || im_vid == 2
-        y_n_plot = 2;
-    end
     output_folder = outputpath;
-    
+
+% SHINE_color: if wizard
 else
     
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: Wizard
 % Specify the image format and the input/output directories here if SHINE
 % is called without input or output arguments:
 input_folder = fullfile(pwd, 'SHINE_color_INPUT'); % SHINE_color: input folder in the current dir
@@ -256,7 +262,7 @@ if im_vid == 2
         return
     end
 
-    [frame_rate, numim] = video2frames(input_folder, video_format);
+    [frame_rate] = video2frames(input_folder, video_format);
     
     while cs ~= 1 && cs ~= 2 && cs ~= 3
         cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
@@ -294,7 +300,7 @@ elseif im_vid == 1
     
 end
 
-%Default values here
+% Default values
 temp = 0; md = 0; wim = 0; backg = 0;
 
 while temp ~= 1 && temp ~= 2
@@ -432,19 +438,13 @@ end
 
 clear temp md wim backg
 
-    % SHINE_color: store channel information as a function of colorspace
-    % (e.g., H, S, V, or R, G, B)
-[channel1, channel2, channel3, images, numim, imname] = readImages(input_folder,imformat,cs); 
+% SHINE_color: store channel information as a function of colorspace
+[channel1, channel2, channel3, images, numim, imname] = readImages(input_folder,imformat,cs,im_vid); 
 
 end
 
-
-
-%%%%%
-% SHINE_color: TEST IMG DIMENSIONS NOT GETTING THE CORRECT DIMENSIONS FROM SHINE
-%img_cols = size(images, 2)
-%img_rows = size(images, 1)
-%%%%%
+% SHINE_color: Wizard end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp(' ')
 disp(sprintf('Number of images: %d', numim));

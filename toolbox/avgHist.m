@@ -45,6 +45,11 @@
 %
 % Replace 'rgb2gray' for 'lum2scale' function
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Remove transformations, all is done under readImages
+% ------------------------------------------------------------------------
 
 function average = avgHist(images,mask)
 
@@ -65,9 +70,6 @@ end
 numim = max(size(images));
 pixels = 0;
 for im = 1:numim
-    if ndims(images{im}) == 3
-        images{im} = lum2scale(images{im}, cs); % SHINE_color: scale luminance channel to greyscale values (0-255)
-    end
     im1 = images{im};
     if nargin > 1
         if iscell(mask) == 1
