@@ -58,9 +58,12 @@
 function [channel1, channel2, channel3, ims, nim, imname] = readImages(pathname, imformat, cs, im_vid)
 
 if im_vid == 2
-    all_images = dir(fullfile(pathname,strcat('*.',imformat))); %todo: read only integer-named files
+    images = dir(fullfile(pathname,strcat('*.',imformat))); %todo: read only integer-named files
+    all_images=regexpi({images.name}, '[0-9]{8}.png', 'match');
 else
-    all_images = dir(fullfile(pathname,strcat('*.',imformat)));
+    images = dir(fullfile(pathname));
+    all_images=regexpi({images.name}, strcat('.*\.',imformat), 'match');
+    all_images= all_images(~cellfun('isempty', all_images'));
 end
 
 nim = length(all_images);
@@ -82,8 +85,8 @@ imname = cell(nim,1);
 end
 
 for im = 1:nim
-    im1 = imread(fullfile(pathname,all_images(im).name));
-    info = imfinfo(fullfile(pathname,all_images(im).name));
+    im1 = imread(fullfile(pathname,all_images{im}{1}));
+    info = imfinfo(fullfile(pathname,all_images{im}{1}));
    
     if cs == 1 % SHINE_color: HSV
         hsv = rgb2hsv(im1); % SHINE_color: convert RGB to HSV
@@ -114,12 +117,12 @@ for im = 1:nim
         
     end
     
-    imname{im} = all_images(im).name; % SHINE_color: define image name
+    imname{im} = all_images{im}{1}; % SHINE_color: define image name
     
     if strcmp(info.ColorType(1:4),'gray')==1
         ims{im} = im1;
         if nargout == 3
-            imname{im} = all_images(im).name;
+            imname{im} = all_images{im}{1};
         end
         
     elseif strcmp(info.ColorType(1:4),'true')==1
@@ -133,7 +136,7 @@ for im = 1:nim
         end
         
         if nargout == 3
-            imname{im} = all_images(im).name;
+            imname{im} = all_images{im}{1};
         end
     else
         error('Please convert all images to grayscale. Some of your images might be indexed images.')
