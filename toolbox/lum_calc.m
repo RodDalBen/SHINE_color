@@ -54,6 +54,8 @@ if cs == 1 % hsv
     cs_tag = 'hsv_'; % colorspace tag
 elseif cs == 2 % lab
     cs_tag = 'cielab_';
+elseif cs == 3 % lab
+    cs_tag = 'rgb_';
 end
 
 % Open output .txt

@@ -205,6 +205,7 @@ if nargin ~= 0
     end
     
     output_folder = outputpath;
+    template_folder = fullfile(pwd,'SHINE_color_TEMPLATE');
 
 % SHINE_color: wizard
 else
@@ -459,101 +460,8 @@ end
 images_orig = images; % SHINE_color: copy of original images for future calculations
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SHINE_color: separate foreground from background
-switch wholeIm
-    case 2
-        mask_fgr = cell(numim,1);
-        mask_bgr = cell(numim,1);
-        for im = 1:numim
-            image = images{im};
-            [mask_f,mask_b,background] = separate(image,0,background);
-            mask_fgr{im} = mask_f;
-            mask_bgr{im} = mask_b;
-        end
-    case 3
-        if nargin < 2
-            [templ,numtemp] = readImages(template_folder,imformat);
-            if numtemp == 0
-                error('No templates found. Please check pathnames and file format.')
-            end
-        else
-            if iscell(templ) == 1
-                numtemp = max(size(templ));
-                if numtemp == 1
-                    templ = cell2mat(templ);
-                end
-            else
-                numtemp = 1;
-            end
-        end
-        if numtemp > 1
-            if numtemp ~= numim
-                error('The number of templates must equal the number of images.')
-            end
-        end
-        for im = 1:numtemp
-            if iscell(templ) == 1
-                [mask_f,mask_b,background] = separate(templ{im},0,background);
-                mask_fgr{im} = mask_f;
-                mask_bgr{im} = mask_b;
-            else
-                [mask_fgr,mask_bgr,background] = separate(templ,0,background);
-            end
-        end
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: display info about transformations
-switch mode
-    case 1
-        if wholeIm == 1
-            disp('Option:   Mean luminance matching on the whole images')
-        else
-            disp(sprintf('Option:   Mean luminance matching separately for the foregrounds and backgrounds (background = all regions of lum %d)',background))
-        end
-        it = 1;
-    case 2
-        if wholeIm == 1
-            disp('Option:   histMatch on the whole images')
-        else
-            disp(sprintf('Option:   histMatch separately for the foregrounds and backgrounds (background = all regions of lum %d)',background'))
-        end
-        it = 1;
-    case 3
-        disp('Option:   sfMatch')
-        it = 1;
-    case 4
-        disp('Option:   specMatch')
-        it = 1;
-    case 5
-        disp(sprintf('Option:   histMatch & sfMatch with %d iteration(s)',it))
-        if wholeIm == 1
-            disp('Option:   whole image')
-        else
-            disp(sprintf('Option:   histMatch separately for the foregrounds and backgrounds (background = all regions of lum %d)',background'))
-        end
-    case 6
-        disp(sprintf('Option:   histMatch & specMatch with %d iteration(s)',it))
-        if wholeIm == 1
-            disp('Option:   whole image')
-        else
-            disp(sprintf('Option:   histMatch separately for the foregrounds and backgrounds (background = all regions of lum %d)',background'))
-        end
-    case 7
-        disp(sprintf('Option:   sfMatch & histMatch with %d iteration(s)',it))
-        if wholeIm == 1
-            disp('Option:   whole image')
-        else
-            disp(sprintf('Option:   histMatch separately for the foregrounds and backgrounds (background = all regions of lum %d)',background'))
-        end
-    case 8
-        disp(sprintf('Option:   specMatch & histMatch with %d iteration(s)',it))
-        if wholeIm == 1
-            disp('Option:   whole image')
-        else
-            disp(sprintf('Option:   histMatch separately for the foregrounds and backgrounds (background = all regions of lum %d)',background'))
-        end
-end
+it=displayInfo(mode,wholeIm,background,it);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: perform transformations
@@ -562,42 +470,23 @@ for iteration = 1:it
         disp(' ')
         disp(sprintf('Iteration %d', iteration))
     end
-    switch mode
-        case 1
-            if wholeIm == 1
-                images = lumMatch(images);
-            else
-                images = lumMatch(images,mask_fgr);
-                images = lumMatch(images,mask_bgr);
-            end
-            disp('Progress: lumMatch successful')                
-        case {2, 5, 6}
-            if wholeIm == 1
-                images = histMatch(images,optim);
-            else
-                images = histMatch(images,optim,[],mask_fgr);
-                images = histMatch(images,optim,[],mask_bgr);
-            end
-            disp('Progress: histMatch successful')
+    if cs == 1
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % SHINE_color: separate foreground from background
+        [mask_fgr,mask_bgr,background] = maskFgrBgr(wholeIm,channel3,numim,background,template_folder,imformat,nargin);
+        channel3_mod = processImage(channel3, mode, wholeIm, mask_fgr, mask_bgr, optim, rescaling);
+    elseif cs == 2
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % SHINE_color: separate foreground from background
+        [mask_fgr,mask_bgr,background] = maskFgrBgr(wholeIm,channel1,numim,background,template_folder,imformat,nargin);
+        channel1_mod = processImage(channel1, mode, wholeIm, mask_fgr, mask_bgr, optim, rescaling);
+    elseif cs == 3
+        channel1_mod = processImage(channel1, mode, wholeIm, [], [], optim, rescaling);
+        channel2_mod = processImage(channel2, mode, wholeIm, [], [], optim, rescaling);
+        channel3_mod = processImage(channel3, mode, wholeIm, [], [], optim, rescaling);
     end
-    switch mode
-        case {3, 5, 7}
-            images = sfMatch(images,rescaling);
-            disp('Progress: sfMatch successful')
-        case {4, 6, 8}
-            images = specMatch(images,rescaling);
-            disp('Progress: specMatch successful')
-    end
-    switch mode
-        case {7, 8}
-            if wholeIm == 1
-                images = histMatch(images,optim);
-            else
-                images = histMatch(images,optim,[],mask_fgr);
-                images = histMatch(images,optim,[],mask_bgr);
-            end
-            disp('Progress: histMatch successful')
-    end
+    
+    
     % SHINE_color: uncomment next line to save each iteration's result
     % to output folder
     %save(fullfile(output_folder,sprintf('SHINE_color_d_%d_it',iteration)),'images')
@@ -612,70 +501,38 @@ mssim_all = 0;
 for im = 1:numim
     if nargout == 0
         
-        %%%%%
-        % Do we need the `if else` here? Same commands on both parts, maybe
-        % just have as the only way in the code? Any safeguards for having
-        % it here? 
-        %%%%%
-        
-        if nargin > 0
         % SHINE_color: rescale value channel from 0-255 to 0-1 (HSV) or 0-100 (CIELab)
             if cs == 1 % SHINE_color: HSV
-                channel3{im} = scale2lum(images{im}, cs); % SHINE_color: channel created on readImages.m
-            elseif cs == 2 % SHINE_color: CIELab
-                channel1{im} = scale2lum(images{im}, cs); % SHINE_color: channel created on readImages.m
-            end
-            
-            % SHINE_color: create a color image (from HSV, CIELab, or RGB)
-            color_im = cat(3, channel1{im}, channel2{im}, channel3{im});
-        
-            % SHINE_color: transform HSV or CIELab to RGB and create label
-            if cs == 1 % hsv
+                channel3_mod{im} = scale2lum(channel3_mod{im}, cs); % SHINE_color: channel created on readImages.m
+                % SHINE_color: create a color image (from HSV, CIELab, or RGB)
+                color_im = cat(3, channel1{im}, channel2{im}, channel3_mod{im});
+                 % SHINE_color: transform HSV or CIELab to RGB and create label
                 color_im = hsv2rgb(color_im);
                 cs_tag = 'hsv_';
-            elseif cs == 2 % lab
+            elseif cs == 2 % SHINE_color: CIELab
+                channel1_mod{im} = scale2lum(channel1_mod{im}, cs); % SHINE_color: channel created on readImages.m
+                % SHINE_color: create a color image (from HSV, CIELab, or RGB)
+                color_im = cat(3, channel1_mod{im}, channel2{im}, channel3{im});
+                 % SHINE_color: transform HSV or CIELab to RGB and create label
                 color_im = lab2rgb(color_im);
                 cs_tag = 'cielab_';
-            elseif cs == 3 % rgb 
-                cs_tag = 'rgb_';                
+             elseif cs == 3 % rgb
+                 % SHINE_color: create a color image (from HSV, CIELab, or RGB)
+                 color_im = cat(3, channel1_mod{im}, channel2_mod{im}, channel3_mod{im});
+                 cs_tag = 'rgb_'; 
             end
-        
+                   
             % SHINE_color: SHINE original command, deprecated
             %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',num2str(im),'.tif'))); 
             
             % SHINE_color: writing the colorful image
             imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.png'))); 
-            
-        else
-            % SHINE_color: rescale value channel (V or L)
-            if cs == 1 % SHINE_color: HSV (0-255 to 0-1)
-                channel3{im} = scale2lum(images{im}, cs); % SHINE_color: channel created on readImages.m
-            elseif cs == 2 % SHINE_color: CIELab (0-255 to 0-100)
-                channel1{im} = scale2lum(images{im}, cs); % SHINE_color: channel created on readImages.m
-            end
-            
-            % SHINE_color: create a color image (from HSV, CIELab, or RGB)
-            color_im = cat(3, channel1{im}, channel2{im}, channel3{im});
-            
-            % SHINE_color: transform hsv or cielab to rgb
-            if cs == 1 % hsv
-                color_im = hsv2rgb(color_im);
-                cs_tag = 'hsv_';
-            elseif cs == 2 % lab
-                color_im = lab2rgb(color_im);
-                cs_tag = 'cielab_';
-            elseif cs == 3 % rgb
-                cs_tag = 'rgb_';
-            end
-
-            %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',imname{im}))); % SHINE_color: original command
-            imwrite(color_im, fullfile(output_folder,strcat('SHINE_color_', cs_tag, imname{im}))); % SHINE_color: writing the colorful image
-        end
     end
-    rmsqe = getRMSE(images_orig{im},images{im});
-    rmsqe_all = rmsqe_all+rmsqe;
-    mssim = ssim_index(images_orig{im},images{im});
-    mssim_all = mssim_all+mssim;
+    %rmsqe = getRMSE(images_orig{im},images{im}); -todo separate by
+    %colorspace
+    %rmsqe_all = rmsqe_all+rmsqe;
+    %mssim = ssim_index(images_orig{im},images{im});
+    %mssim_all = mssim_all+mssim;
 end
 
 lum_calc(images_orig, images, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
