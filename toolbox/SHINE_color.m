@@ -185,7 +185,8 @@ optim = 0;        % 0 = no SSIM optimization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % SHINE_color: differentiating between call on command line or wizard
-% SHINE_color: if command line
+
+% SHINE_color: command line
 if nargin ~= 0
     if nargin < 6
         y_n_plot = 2;
@@ -205,7 +206,7 @@ if nargin ~= 0
     
     output_folder = outputpath;
 
-% SHINE_color: if wizard
+% SHINE_color: wizard
 else
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -454,8 +455,10 @@ if numim < 2
     error('At least 2 images are required. Please check pathnames and file format.') % SHINE_color: >= 2 images required
 end
 
+% FIX
 images_orig = images; % SHINE_color: copy of original images for future calculations
 
+% SHINE_color: separate foreground from background
 switch wholeIm
     case 2
         mask_fgr = cell(numim,1);
@@ -498,6 +501,7 @@ switch wholeIm
         end
 end
 
+% SHINE_color: display info about transformations
 switch mode
     case 1
         if wholeIm == 1
@@ -549,6 +553,7 @@ switch mode
         end
 end
 
+% SHINE_color: perform transformations
 for iteration = 1:it
     if it > 1
         disp(' ')

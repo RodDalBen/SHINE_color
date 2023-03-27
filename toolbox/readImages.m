@@ -52,34 +52,30 @@
 % SHINE_color toolbox, March 2023, version 0.0.5
 % adapted by Rodrigo Dal Ben
 %
-% Extract RGB channels when selecting this colorspace. 
+% - Extract RGB channels when selecting this colorspace.
+% - Streamline luminance scale
 % ------------------------------------------------------------------------
 
 function [channel1, channel2, channel3, ims, nim, imname] = readImages(pathname, imformat, cs, im_vid)
 
-if im_vid == 2
-    all_images = dir(fullfile(pathname,strcat('*.',imformat))); %todo: read only integer-named files
-else
-    all_images = dir(fullfile(pathname,strcat('*.',imformat)));
-end
-
+all_images = dir(fullfile(pathname,strcat('*.',imformat))); 
 nim = length(all_images);
 ims = cell(nim,1);
 
-channel1 = cell(nim,1); % SHINE_color: stores hue (HSV) or luminance (CIELab) or red channel (RGB)
-channel2 = cell(nim,1); % SHINE_color: stores saturation (HSV) or A (CIELab) or green channel (RGB)
-channel3 = cell(nim,1); % SHINE_color: stores value (HSV) or b (CIELab) or blue channel (RGB)
-
-% SHINE_color: store RGB channels
-if cs == 3
-    rgb_channels = cell(nim, 3); 
-end
+% SHINE_color: store RGB channels - DELETE?
+%if cs == 3
+%    rgb_channels = cell(nim, 3); 
+%end
 
 imname = cell(nim,1); % SHINE_color: define image name
 
 if nargout == 3
-imname = cell(nim,1);
+    imname = cell(nim,1);
 end
+
+channel1 = cell(nim,1); % SHINE_color: stores hue (HSV) or luminance (CIELab) or red channel (RGB)
+channel2 = cell(nim,1); % SHINE_color: stores saturation (HSV) or A (CIELab) or green channel (RGB)
+channel3 = cell(nim,1); % SHINE_color: stores value (HSV) or b (CIELab) or blue channel (RGB)
 
 for im = 1:nim
     im1 = imread(fullfile(pathname,all_images(im).name));
