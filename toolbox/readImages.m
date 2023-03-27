@@ -52,34 +52,41 @@
 % SHINE_color toolbox, March 2023, version 0.0.5
 % adapted by Rodrigo Dal Ben
 %
-% - Extract RGB channels when selecting this colorspace.
-% - Streamline luminance scale
+% Extract RGB channels when selecting this colorspace. 
 % ------------------------------------------------------------------------
 
 function [channel1, channel2, channel3, ims, nim, imname] = readImages(pathname, imformat, cs, im_vid)
 
-all_images = dir(fullfile(pathname,strcat('*.',imformat))); 
+if im_vid == 2
+    images = dir(fullfile(pathname,strcat('*.',imformat))); %todo: read only integer-named files
+    all_images=regexpi({images.name}, '[0-9]{8}.png', 'match');
+else
+    images = dir(fullfile(pathname));
+    all_images=regexpi({images.name}, strcat('.*\.',imformat), 'match');
+    all_images= all_images(~cellfun('isempty', all_images'));
+end
+
 nim = length(all_images);
 ims = cell(nim,1);
-
-% SHINE_color: store RGB channels - DELETE?
-%if cs == 3
-%    rgb_channels = cell(nim, 3); 
-%end
-
-imname = cell(nim,1); % SHINE_color: define image name
-
-if nargout == 3
-    imname = cell(nim,1);
-end
 
 channel1 = cell(nim,1); % SHINE_color: stores hue (HSV) or luminance (CIELab) or red channel (RGB)
 channel2 = cell(nim,1); % SHINE_color: stores saturation (HSV) or A (CIELab) or green channel (RGB)
 channel3 = cell(nim,1); % SHINE_color: stores value (HSV) or b (CIELab) or blue channel (RGB)
 
+% SHINE_color: store RGB channels
+if cs == 3
+    rgb_channels = cell(nim, 3); 
+end
+
+imname = cell(nim,1); % SHINE_color: define image name
+
+if nargout == 3
+imname = cell(nim,1);
+end
+
 for im = 1:nim
-    im1 = imread(fullfile(pathname,all_images(im).name));
-    info = imfinfo(fullfile(pathname,all_images(im).name));
+    im1 = imread(fullfile(pathname,all_images{im}{1}));
+    info = imfinfo(fullfile(pathname,all_images{im}{1}));
    
     if cs == 1 % SHINE_color: HSV
         hsv = rgb2hsv(im1); % SHINE_color: convert RGB to HSV
@@ -110,12 +117,12 @@ for im = 1:nim
         
     end
     
-    imname{im} = all_images(im).name; % SHINE_color: define image name
+    imname{im} = all_images{im}{1}; % SHINE_color: define image name
     
     if strcmp(info.ColorType(1:4),'gray')==1
         ims{im} = im1;
         if nargout == 3
-            imname{im} = all_images(im).name;
+            imname{im} = all_images{im}{1};
         end
         
     elseif strcmp(info.ColorType(1:4),'true')==1
@@ -129,7 +136,7 @@ for im = 1:nim
         end
         
         if nargout == 3
-            imname{im} = all_images(im).name;
+            imname{im} = all_images{im}{1};
         end
     else
         error('Please convert all images to grayscale. Some of your images might be indexed images.')
