@@ -444,9 +444,6 @@ clear temp md wim backg
 
 end
 
-% SHINE_color: Wizard end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 disp(' ')
 disp(sprintf('Number of images: %d', numim));
 disp(' ')
@@ -455,9 +452,13 @@ if numim < 2
     error('At least 2 images are required. Please check pathnames and file format.') % SHINE_color: >= 2 images required
 end
 
+% SHINE_color: Wizard end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % FIX
 images_orig = images; % SHINE_color: copy of original images for future calculations
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: separate foreground from background
 switch wholeIm
     case 2
@@ -501,6 +502,7 @@ switch wholeIm
         end
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: display info about transformations
 switch mode
     case 1
@@ -553,6 +555,7 @@ switch mode
         end
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: perform transformations
 for iteration = 1:it
     if it > 1
@@ -562,7 +565,7 @@ for iteration = 1:it
     switch mode
         case 1
             if wholeIm == 1
-                images = lumMatch(images); 
+                images = lumMatch(images);
             else
                 images = lumMatch(images,mask_fgr);
                 images = lumMatch(images,mask_bgr);
@@ -600,8 +603,11 @@ for iteration = 1:it
     %save(fullfile(output_folder,sprintf('SHINE_color_d_%d_it',iteration)),'images')
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 rmsqe_all = 0;
 mssim_all = 0;
+
 
 for im = 1:numim
     if nargout == 0
@@ -684,6 +690,8 @@ SSIM = mssim_all/numim;
 disp(' ')
 disp(sprintf('RMSE:     %d',RMSE))
 disp(sprintf('SSIM:     %d',SSIM))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if im_vid == 2
     disp([10 'Progress: Re-creating video with new properties.' 10]);

@@ -33,7 +33,7 @@ if size(x,3)==3
         hsv = rgb2hsv(x);
         v = hsv(:,:,3);
         y = uint8(v*255);
-        
+                
     elseif cs == 2 % CIELab
         lab = rgb2lab(x);
         l = lab(:,:,1);

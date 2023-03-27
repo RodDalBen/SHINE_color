@@ -52,13 +52,14 @@
 % SHINE_color toolbox, March 2023, version 0.0.5
 % adapted by Rodrigo Dal Ben
 %
-% Extract RGB channels when selecting this colorspace. 
+% - Extract RGB channels when selecting this colorspace.
+% - Scale luminance (old lum2scale fun).
 % ------------------------------------------------------------------------
 
 function [channel1, channel2, channel3, ims, nim, imname] = readImages(pathname, imformat, cs, im_vid)
 
 if im_vid == 2
-    images = dir(fullfile(pathname,strcat('*.',imformat))); %todo: read only integer-named files
+    images = dir(fullfile(pathname,strcat('*.',imformat))); % SHINE_color: if video, read only saved frames
     all_images=regexpi({images.name}, '[0-9]{8}.png', 'match');
 else
     images = dir(fullfile(pathname));
@@ -68,78 +69,46 @@ end
 
 nim = length(all_images);
 ims = cell(nim,1);
+imname = cell(nim,1); % SHINE_color: define image name
 
 channel1 = cell(nim,1); % SHINE_color: stores hue (HSV) or luminance (CIELab) or red channel (RGB)
 channel2 = cell(nim,1); % SHINE_color: stores saturation (HSV) or A (CIELab) or green channel (RGB)
 channel3 = cell(nim,1); % SHINE_color: stores value (HSV) or b (CIELab) or blue channel (RGB)
 
-% SHINE_color: store RGB channels
-if cs == 3
-    rgb_channels = cell(nim, 3); 
-end
-
-imname = cell(nim,1); % SHINE_color: define image name
-
 if nargout == 3
 imname = cell(nim,1);
 end
 
-for im = 1:nim
+for im = 1:nim 
     im1 = imread(fullfile(pathname,all_images{im}{1}));
     info = imfinfo(fullfile(pathname,all_images{im}{1}));
-   
-    if cs == 1 % SHINE_color: HSV
-        hsv = rgb2hsv(im1); % SHINE_color: convert RGB to HSV
-        hue = hsv(:,:,1); % SHINE_color: extract hue channel
-        sat = hsv(:,:,2); % SHINE_color: extract saturation channel
-        
-        channel1{im} = hue; % SHINE_color: stores hue
-        channel2{im} = sat; % SHINE_color: stores saturation
-    
-    elseif cs == 2  % SHINE_color: CIELab
-        lab = rgb2lab(im1); % SHINE_color: convert RGB to CIELab
-        a = lab(:,:,2); % SHINE_color: extract A channel
-        b = lab(:,:,3); % SHINE_color: extract B channel
-        
-        channel2{im} = a; % SHINE_color: stores A channel
-        channel3{im} = b; % SHINE_color: stores B channel
-        
-    elseif cs == 3 % SHINE_color: RGB
-        channel1{im} = im1(:,:,1); % SHINE_color: red channel
-        channel2{im} = im1(:,:,2); % SHINE_color: green channel
-        channel3{im} = im1(:,:,3); % SHINE_color: blue channel
-                
-        % SHINE_color: stores RGB channels a single cell, each image in one
-        % row {number of images, 3 channels}
-        rgb_channels{im, 1} = channel1{im}; % SHINE_color: red channel
-        rgb_channels{im, 2} = channel2{im}; % SHINE_color: green channel
-        rgb_channels{im, 3} = channel3{im}; % SHINE_color: blue channel
-        
-    end
-    
-    imname{im} = all_images{im}{1}; % SHINE_color: define image name
     
     if strcmp(info.ColorType(1:4),'gray')==1
-        ims{im} = im1;
-        if nargout == 3
-            imname{im} = all_images{im}{1};
-        end
-        
+        channel_grey{im} = im1; % SHINE_color: grey channel
+        imname{im} = all_images{im}{1};
+    
     elseif strcmp(info.ColorType(1:4),'true')==1
+    if cs == 1 % SHINE_color: HSV
         
-        % SHINE_color: scale cells with V (HSV) and L (CIELab)
-        if cs == 1 || cs == 2
-            im1 = lum2scale(im1, cs);
-            ims{im} = im1; % SHINE_color: store scaled channel
-        elseif cs == 3
-            ims = rgb_channels; % SHINE_color: RGB extracted channels as a cell {n, 3}
-        end
+        hsv = rgb2hsv(im1); % SHINE_color: convert RGB to HSV
+        channel1{im} = hsv(:,:,1); % SHINE_color: stores hue
+        channel2{im} = hsv(:,:,2); % SHINE_color: stores saturation
+        channel3{im} = uint8(hsv(:,:,3)*255); % SHINE_color: scaled value channel to manipulate 
         
-        if nargout == 3
-            imname{im} = all_images{im}{1};
-        end
+    elseif cs == 2  % SHINE_color: CIELab
+        lab = rgb2lab(im1); % SHINE_color: convert RGB to CIELab
+        channel1{im} = uint8(lab(:,:,1)*2.55); % SHINE_color: scaled lum channel to manipulate  
+        channel2{im} = lab(:,:,2); % SHINE_color: stores A channel
+        channel3{im} = lab(:,:,3); % SHINE_color: stores B channel
+        
+    elseif cs == 3 % SHINE_color: RGB
+        channel1{im} = im1(:,:,1); % SHINE_color: red channel to manipulate 
+        channel2{im} = im1(:,:,2); % SHINE_color: green channel to manipulate 
+        channel3{im} = im1(:,:,3); % SHINE_color: blue channel to manipulate                    
+    end
+        imname{im} = all_images{im}{1}; % SHINE_color: define image name
     else
-        error('Please convert all images to grayscale. Some of your images might be indexed images.')
+        error('Please convert provide either RGB or grayscale images.') % SHINE_color: force appropriate input
     end
 end
 
