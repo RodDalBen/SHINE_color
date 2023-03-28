@@ -142,6 +142,8 @@
 % -- RGB channels stored as a cell array (readImages);
 % -- Iterate between rgb channels (lumMatch, ADD.............)
 %
+% - describe new functions
+%
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
@@ -461,7 +463,7 @@ images_orig = images; % SHINE_color: copy of original images for future calculat
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: display info about transformations
-it=displayInfo(mode,wholeIm,background,it);
+it = displayInfo(mode,wholeIm,background,it);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: perform transformations
@@ -471,12 +473,10 @@ for iteration = 1:it
         disp(sprintf('Iteration %d', iteration))
     end
     if cs == 1
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % SHINE_color: separate foreground from background
         [mask_fgr,mask_bgr,background] = maskFgrBgr(wholeIm,channel3,numim,background,template_folder,imformat,nargin);
         channel3_mod = processImage(channel3, mode, wholeIm, mask_fgr, mask_bgr, optim, rescaling);
     elseif cs == 2
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % SHINE_color: separate foreground from background
         [mask_fgr,mask_bgr,background] = maskFgrBgr(wholeIm,channel1,numim,background,template_folder,imformat,nargin);
         channel1_mod = processImage(channel1, mode, wholeIm, mask_fgr, mask_bgr, optim, rescaling);
