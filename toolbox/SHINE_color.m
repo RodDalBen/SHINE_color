@@ -207,240 +207,12 @@ if nargin ~= 0
     end
     
     output_folder = outputpath;
-    template_folder = fullfile(pwd,'SHINE_color_TEMPLATE');
+    template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); %marretado pra funcionar
 
 % SHINE_color: wizard
 else
     
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SHINE_color: Wizard
-% Specify the image format and the input/output directories here if SHINE
-% is called without input or output arguments:
-input_folder = fullfile(pwd, 'SHINE_color_INPUT'); % SHINE_color: input folder in the current dir
-output_folder = fullfile(pwd,'SHINE_color_OUTPUT'); % SHINE_color: output folder in the current dir
-template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); % SHINE_color: template folder in the current dir
-
-% SHINE_color: define initial values for:
-im_vid = 0; % SHINE_color: static image or video
-quitmsg = 'SHINE_color was quit.'; % SHINE_color: quit std message
-cs = 0; % SHINE_color: colorspace to be used
-y_n_plot = 0; % SHINE_color: to plot manipulations or not
-
-% SHINE_color: start by selecting image or video processing:
-while im_vid ~= 1 && im_vid ~= 2
-    prompt = 'Input     [1=images, 2=video]: ';
-    im_vid = input(prompt);
-    if isempty(im_vid) == 1 % SHINE_color: forced choice
-        disp(quitmsg)
-        return;
-    end 
-end
-
-y_n = 0;
-
-if im_vid == 2
-    while y_n ~= 1 && y_n ~= 2
-    prompt = 'The INPUT folder contains only one video and the OUTPUT folder is empty? [1=yes, 2=no]: ';
-    y_n = input(prompt);
-        if isempty(y_n) == 1 % SHINE_color: forced choice
-            disp(quitmsg)
-            return;
-        end 
-    end
-        if y_n == 2
-            disp('Error: the INPUT folder must contain only one video and the OUTPUT folder must be empty');
-            return
-        else
-            prompt = 'Type the video format    [e.g., mp4, avi]: ';
-            video_format = input(prompt,'s');
-            imformat = 'png';
-            if isempty(video_format)
-                video_format = 'mp4';
-                disp('mp4 as default');
-            end
-        end
-
-    videoList = dir(fullfile(input_folder, strcat('*.', video_format)));
-    if length(videoList) > 1
-        disp('Error: The INPUT folder must contain only one video at a time.')
-        return
-    end
-
-    [frame_rate] = video2frames(input_folder, video_format);
-    
-    while cs ~= 1 && cs ~= 2 && cs ~= 3
-        cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
-        if isempty(cs) == 1
-            disp(quitmsg);
-            return
-        end
-    end
-    
-elseif im_vid == 1
-    
-    % SHINE_color: user input on img format
-    prompt = 'Type the image format  [e.g., jpg, png]: ';
-    imformat = input(prompt,'s');
-    if isempty(imformat)
-      imformat = 'jpg';
-      disp('jpg as default');
-    end
-    
-    while cs ~= 1 && cs ~= 2 && cs ~= 3
-    cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
-        if isempty(cs) == 1
-            disp(quitmsg);
-            return
-        end
-    end
-    
-    while y_n_plot ~= 1 && y_n_plot ~= 2
-    y_n_plot = input('Do you want diagnostic plots? (may take some time)    [1=yes, 2=no]: ');
-        if isempty(y_n_plot) == 1
-            disp(quitmsg);
-            return
-        end
-    end
-    
-end
-
-% Default values
-temp = 0; md = 0; wim = 0; backg = 0;
-
-while temp ~= 1 && temp ~= 2
-    temp = input('SHINE_color options    [1=default, 2=custom]: ');
-    if isempty(temp) == 1
-        disp(quitmsg)
-        return;
-    end
-end
-
-if temp == 2
-    temp = 0;
-
-    while temp ~= 1 && temp ~= 2 && temp ~= 3
-        temp = input('Matching mode    [1=luminance, 2=spatial frequency, 3=both]: ');
-        if isempty(temp) == 1 
-            disp(quitmsg)
-            return;
-        end
-    end
-    
-    if temp == 1
-        while md ~= 1 && md ~= 2
-            md = input('Luminance option [1=lumMatch, 2=histMatch]: ');
-            if isempty(md) == 1 
-                disp(quitmsg)
-                return;
-            end
-            if md == 2
-                while optim ~= 2 && optim ~= 3
-                optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
-                if isempty(optim) == 1 
-                    disp(quitmsg)
-                    return;
-                end 
-                end
-            end
-        end
-        
-    elseif temp == 2
-        while md ~= 3 && md ~= 4
-            md = 2+input('Spectrum options [1=sfMatch, 2=specMatch]: ');
-            if isempty(md) == 1
-                disp(quitmsg)
-                return;
-            end
-        end
-        
-    elseif temp == 3
-        while md ~= 5 && md ~= 6 && md ~= 7 && md ~= 8
-            md = 4+input('Matching of both [1=hist&sf, 2=hist&spec, 3=sf&hist, 4=spec&hist]: ');
-            if isempty(md) == 1
-                disp(quitmsg)
-                return;
-            end 
-        end
-        
-        while optim ~= 2 && optim ~= 3
-            optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
-            if isempty(optim) == 1
-                disp(quitmsg)
-                return;
-            end
-        end
-        optim = optim-2;
-            
-        it = input('# of iterations? ');
-        if isempty(it) == 1
-           disp('Will run 1 iteration.')
-        end
-                
-    end
-
-    mode = md;
-
-    if temp == 1 || temp == 3
-        if nargin < 2
-            while wim ~= 1 && wim ~= 2
-                wim = input('Matching region  [1=whole image, 2=foreground/background]: ');
-                if isempty(wim) == 1
-                    disp(quitmsg)
-                    return;
-                end
-            end
-        else
-            wim = 2;
-        end
-        if wim == 2
-            wim = 0;
-            if nargin < 2
-                while wim ~= 2 && wim ~= 3
-                    wim = 1+input('Segmentation of: [1=source images, 2=template(s)]: ');
-                    if isempty(wim) == 1
-                        disp(quitmsg)
-                        return;
-                    end
-                end
-            else
-                wim = 3;
-            end
-            if wim == 2
-                while backg ~= 1 && backg ~= 2
-                    backg = input('Image background [1=specify lum, 2=find automatically (most frequent lum in the image)]: ');
-                    if isempty(backg) == 1
-                        disp(quitmsg)
-                        return;
-                    end
-                end
-            else
-                while backg ~= 1 && backg ~= 2
-                    backg = input('Templ background [1=specify lum, 2=find automatically (most frequent lum in the template)]: ');
-                    if isempty(backg) == 1
-                        disp(quitmsg)
-                        return;
-                    end
-                end
-            end
-            if backg == 1
-                backg = 1.1;
-                while mod(backg,1) > 0 || backg < 0 || backg > 255
-                    backg = input('Enter lum value  [integer between 0 and 255]: ');
-                    if isempty(backg) == 1
-                        disp(quitmsg)
-                        return;
-                    end
-                end
-            else
-                backg = 300;
-            end
-            background = backg;
-        end
-        wholeIm = wim;
-    end
-end
-
-clear temp md wim backg
+[input_folder,output_folder,template_folder,cs,imformat,im_vid,frame_rate,mode,background,wholeIm,optim,y_n_plot] = userWizard(mode,background,wholeIm,optim);
 
 % SHINE_color: store channel information as a function of colorspace
 [channel1, channel2, channel3, images, numim, imname] = readImages(input_folder,imformat,cs,im_vid); 
@@ -448,7 +220,7 @@ clear temp md wim backg
 end
 
 disp(' ')
-disp(sprintf('Number of images: %d', numim));
+fprintf('Number of images: %d\n', numim);
 disp(' ')
 
 if numim < 2
@@ -470,7 +242,7 @@ it = displayInfo(mode,wholeIm,background,it);
 for iteration = 1:it
     if it > 1
         disp(' ')
-        disp(sprintf('Iteration %d', iteration))
+        fprintf('Iteration %d\n', iteration)
     end
     if cs == 1
         % SHINE_color: separate foreground from background
@@ -509,6 +281,11 @@ for im = 1:numim
                  % SHINE_color: transform HSV or CIELab to RGB and create label
                 color_im = hsv2rgb(color_im);
                 cs_tag = 'hsv_';
+                rmsqe = getRMSE(channel3{im},channel3_mod{im});
+                rmsqe_all = rmsqe_all+rmsqe;
+                mssim = ssim_index(channel3{im},channel3_mod{im});
+                mssim_all = mssim_all+mssim;
+                
             elseif cs == 2 % SHINE_color: CIELab
                 channel1_mod{im} = scale2lum(channel1_mod{im}, cs); % SHINE_color: channel created on readImages.m
                 % SHINE_color: create a color image (from HSV, CIELab, or RGB)
@@ -516,10 +293,17 @@ for im = 1:numim
                  % SHINE_color: transform HSV or CIELab to RGB and create label
                 color_im = lab2rgb(color_im);
                 cs_tag = 'cielab_';
-             elseif cs == 3 % rgb
+                rmsqe = getRMSE(channel1{im},channel1_mod{im});
+                rmsqe_all = rmsqe_all+rmsqe;
+                mssim = ssim_index(channel1{im},channel1_mod{im});
+                mssim_all = mssim_all+mssim;
+                
+             elseif cs == 3 % SHINE_color: RGB
                  % SHINE_color: create a color image (from HSV, CIELab, or RGB)
                  color_im = cat(3, channel1_mod{im}, channel2_mod{im}, channel3_mod{im});
                  cs_tag = 'rgb_'; 
+                 
+                 %how to calculate RMSE for rgb?
             end
                    
             % SHINE_color: SHINE original command, deprecated
@@ -528,25 +312,38 @@ for im = 1:numim
             % SHINE_color: writing the colorful image
             imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.png'))); 
     end
-    %rmsqe = getRMSE(images_orig{im},images{im}); -todo separate by
-    %colorspace
-    %rmsqe_all = rmsqe_all+rmsqe;
-    %mssim = ssim_index(images_orig{im},images{im});
     %mssim_all = mssim_all+mssim;
+
 end
 
-lum_calc(images_orig, images, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
-
-if y_n_plot == 1
-    diag_plots(images_orig, images, imname, cs, mode); % SHINE_color: diagnostic plots
+if cs == 1 % SHINE_color: HSV
+    lum_calc(channel3, channel3_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
+    if y_n_plot == 1
+    diag_plots(channel3, channel3_mod, imname, cs, mode); % SHINE_color: diagnostic plots
+    end
+elseif cs == 2 %SHINE_color: CIELab
+    lum_calc(channel1, channel1_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
+    if y_n_plot == 1
+    diag_plots(channel1, channel1_mod, imname, cs, mode); % SHINE_color: diagnostic plots
+    end
+elseif cs == 3 %SHINE_color: RGB
+    lum_calc(channel1, channel1_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
+    lum_calc(channel2, channel2_mod, imname, cs); 
+    lum_calc(channel3, channel3_mod, imname, cs); 
+    if y_n_plot == 1
+    diag_plots(channel1, channel1_mod, imname, cs, mode); % SHINE_color: diagnostic plots
+    diag_plots(channel2, channel2_mod, imname, cs, mode); 
+    diag_plots(channel3, channel3_mod, imname, cs, mode);
+    end
 end
+
 
 RMSE = rmsqe_all/numim;
 SSIM = mssim_all/numim;
 
 disp(' ')
-disp(sprintf('RMSE:     %d',RMSE))
-disp(sprintf('SSIM:     %d',SSIM))
+fprintf('RMSE:     %d\n',RMSE)
+fprintf('SSIM:     %d\n',SSIM)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

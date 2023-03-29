@@ -63,6 +63,8 @@ if cs == 1 % hsv
     cs_tag = 'hsv';
 elseif cs == 2 % lab
     cs_tag = 'cielab';
+elseif cs == 3 % rgb
+    cs_tag = 'rgb';
 end
 
 % set img indices for loops
