@@ -230,9 +230,6 @@ end
 % SHINE_color: Wizard end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% FIX
-images_orig = images; % SHINE_color: copy of original images for future calculations
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: display info about transformations
 it = displayInfo(mode,wholeIm,background,it);
@@ -312,7 +309,7 @@ for im = 1:numim
             % SHINE_color: writing the colorful image
             imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.png'))); 
     end
-    %mssim_all = mssim_all+mssim;
+    %mssim_all = mssim_all+mssim; %uncomment will break for RGB
 
 end
 
@@ -331,9 +328,9 @@ elseif cs == 3 %SHINE_color: RGB
     lum_calc(channel2, channel2_mod, imname, cs); 
     lum_calc(channel3, channel3_mod, imname, cs); 
     if y_n_plot == 1
-    diag_plots(channel1, channel1_mod, imname, cs, mode); % SHINE_color: diagnostic plots
-    diag_plots(channel2, channel2_mod, imname, cs, mode); 
-    diag_plots(channel3, channel3_mod, imname, cs, mode);
+    diag_plots(channel1, channel1_mod, imname, cs, mode, 'R'); % SHINE_color: diagnostic plots
+    diag_plots(channel2, channel2_mod, imname, cs, mode, 'G'); 
+    diag_plots(channel3, channel3_mod, imname, cs, mode, 'B');
     end
 end
 
