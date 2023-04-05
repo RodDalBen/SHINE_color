@@ -207,8 +207,9 @@ if nargin ~= 0
     end
     
     output_folder = outputpath;
-    template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); %marretado pra funcionar
+    template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); %marretado pra funcionar - PRECISAMOS INCLUIR UM ARGUMENTO NA LINHA DE COMANDO? OU ESSE CAMINHO NAO E' POSSIVEL POR LA?
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: wizard
 else
     
@@ -226,9 +227,6 @@ disp(' ')
 if numim < 2
     error('At least 2 images are required. Please check pathnames and file format.') % SHINE_color: >= 2 images required
 end
-
-% SHINE_color: Wizard end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: display info about transformations
@@ -262,6 +260,7 @@ for iteration = 1:it
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: scale luminance, calculate RMSE and SSIM
 
 rmsqe_all = 0;
 mssim_all = 0;
@@ -313,6 +312,17 @@ for im = 1:numim
 
 end
 
+RMSE = rmsqe_all/numim;
+SSIM = mssim_all/numim;
+
+disp(' ')
+fprintf('RMSE:     %d\n',RMSE)
+fprintf('SSIM:     %d\n',SSIM)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: calculate pre-pos stats for each image, create diagnostic
+% plots
+
 if cs == 1 % SHINE_color: HSV
     lum_calc(channel3, channel3_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
     if y_n_plot == 1
@@ -325,7 +335,7 @@ elseif cs == 2 %SHINE_color: CIELab
     end
 elseif cs == 3 %SHINE_color: RGB
     lum_calc(channel1, channel1_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
-    lum_calc(channel2, channel2_mod, imname, cs); 
+    lum_calc(channel2, channel2_mod, imname, cs); % ADD RGB CHANNEL TO TAG
     lum_calc(channel3, channel3_mod, imname, cs); 
     if y_n_plot == 1
     diag_plots(channel1, channel1_mod, imname, cs, mode, 'R'); % SHINE_color: diagnostic plots
@@ -334,15 +344,8 @@ elseif cs == 3 %SHINE_color: RGB
     end
 end
 
-
-RMSE = rmsqe_all/numim;
-SSIM = mssim_all/numim;
-
-disp(' ')
-fprintf('RMSE:     %d\n',RMSE)
-fprintf('SSIM:     %d\n',SSIM)
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: build video from frames
 
 if im_vid == 2
     disp([10 'Progress: Re-creating video with new properties.' 10]);
@@ -354,8 +357,8 @@ disp(' ')
 disp('All done, please remember to check your Monitor calibration to ensure proper luminance display.')
 disp(' ')
 
-% SHINE_color: display citation info. 
-%%%%% Should we add License info? Match GitHub
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: display citation and license
 
 fprintf(['Please cite: \n',... 
     'Dal Ben, R. (2021, July 5). SHINE_color: controlling low-level properties of colorful images. \n',...
@@ -364,6 +367,10 @@ fprintf(['Please cite: \n',...
     'Willenbockel, V., Sadr, J., Fiset, D., Horne, G. O., Gosselin, F., & Tanaka, J. W. (2010).\n',...
     'Controlling low-level image properties: The SHINE toolbox.\n',... 
     'Behavior Research Methods, 42(3), 671?684. http://doi.org/10.3758/BRM.42.3.671\n'])
+
+fprintf('MIT License, Copyright (c) 2021 Rodrigo Dal Ben')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if nargout < 1
     clear images
