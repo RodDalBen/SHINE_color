@@ -61,10 +61,13 @@ end
 % set color space tag
 if cs == 1 % hsv
     cs_tag = 'hsv';
+    diag_title = {"Luminance channel HSV",'Pre vs. Post', ''}; %avoid overlay
 elseif cs == 2 % lab
     cs_tag = 'cielab';
+    diag_title = {"Luminance channel CIELab",'Pre vs. Post', ''};
 elseif cs == 3 % rgb
     cs_tag = strcat('rgb_',rgb_channel);
+    diag_title = {strcat('Luminance channel RGB:', rgb_channel),'Pre vs. Post', ''};
 end
 
 % set img indices for loops
@@ -127,7 +130,7 @@ if md ~= 1
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel','Pre vs. Post', ''}); % avoid overlay
+                    title(labs, diag_title); 
                     ylabel(labs,{'Number of Pixels', ''});
                     xlabel(labs,{'','Grayscale Luminance (0-255)'});  
                     
@@ -139,7 +142,7 @@ if md ~= 1
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel', 'Pre vs. Post', ''});
+                    title(labs, diag_title);
                     ylabel(labs,{'Energy', ''});
                     xlabel(labs,{'','Spatial frequency (cycles/image)'});
                 
@@ -151,7 +154,7 @@ if md ~= 1
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel', 'Pre vs. Post', ''});
+                    title(labs, diag_title);
                     ylabel(labs,{'Amplitude', ''}); 
                     xlabel(labs,{'','Amplitude'});
                 end

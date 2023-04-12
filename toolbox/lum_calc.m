@@ -42,7 +42,7 @@
 % ------------------------------------------------------------------------
 
 
-function lum_calc (images_orig, images, imname, cs)
+function lum_calc (images_orig, images, imname, cs, rgb_channel)
 % Set output folder
 output_folder_diagnostics = fullfile(pwd,'SHINE_color_OUTPUT', 'DIAGNOSTICS');
 
@@ -55,7 +55,7 @@ if cs == 1 % hsv
 elseif cs == 2 % lab
     cs_tag = 'cielab_';
 elseif cs == 3 % lab
-    cs_tag = 'rgb_';
+    cs_tag = strcat('rgb_',rgb_channel,'_');
 end
 
 % Open output .txt

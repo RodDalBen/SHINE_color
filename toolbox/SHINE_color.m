@@ -334,9 +334,9 @@ elseif cs == 2 %SHINE_color: CIELab
     diag_plots(channel1, channel1_mod, imname, cs, mode); % SHINE_color: diagnostic plots
     end
 elseif cs == 3 %SHINE_color: RGB
-    lum_calc(channel1, channel1_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
-    lum_calc(channel2, channel2_mod, imname, cs); % ADD RGB CHANNEL TO TAG
-    lum_calc(channel3, channel3_mod, imname, cs); 
+    lum_calc(channel1, channel1_mod, imname, cs, 'R'); % SHINE_color: luminance calculation for original and manipulated images
+    lum_calc(channel2, channel2_mod, imname, cs, 'G'); % ADD RGB CHANNEL TO TAG
+    lum_calc(channel3, channel3_mod, imname, cs, 'B'); 
     if y_n_plot == 1
     diag_plots(channel1, channel1_mod, imname, cs, mode, 'R'); % SHINE_color: diagnostic plots
     diag_plots(channel2, channel2_mod, imname, cs, mode, 'G'); 
