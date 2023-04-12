@@ -171,29 +171,21 @@ if temp == 2
     mode = md;
 
     if temp == 1 || temp == 3
-        if nargin < 2
-            while wim ~= 1 && wim ~= 2
-                wim = input('Matching region  [1=whole image, 2=foreground/background]: ');
+        while wim ~= 1 && wim ~= 2
+            wim = input('Matching region  [1=whole image, 2=foreground/background]: ');
+            if isempty(wim) == 1
+                disp(quitmsg)
+                return;
+            end
+        end
+        if wim == 2
+            wim = 0;
+            while wim ~= 2 && wim ~= 3
+                wim = 1+input('Segmentation of: [1=source images, 2=template(s)]: ');
                 if isempty(wim) == 1
                     disp(quitmsg)
                     return;
                 end
-            end
-        else
-            wim = 2;
-        end
-        if wim == 2
-            wim = 0;
-            if nargin < 2
-                while wim ~= 2 && wim ~= 3
-                    wim = 1+input('Segmentation of: [1=source images, 2=template(s)]: ');
-                    if isempty(wim) == 1
-                        disp(quitmsg)
-                        return;
-                    end
-                end
-            else
-                wim = 3;
             end
             if wim == 2
                 while backg ~= 1 && backg ~= 2
