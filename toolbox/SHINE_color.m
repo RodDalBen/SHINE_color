@@ -134,15 +134,21 @@
 % (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
 %
 % Updates & improvements:
-% - Functional command line call for images and videos, all input is read by readImages; DONE! 
-% - Remove transformation within individual functions; TO-DO
-% - Updates on diag_plots; (TO-DO)
-% - Add manipulation directly on RGB channels: (TO-DO)
+% - Functional command line call, input is read by readImages; 
+% - Streamline readImages.m and deprecated lum2scale.m;
+% - Remove image reading and preprocessing from individual functions;
+% - Streamline comments, descriptions, and standardize function naming; TO-DO
+% - Add license info to main script;
+% - Make main script modular, added: 
+% -- displayInfo.m; 
+% -- processImage.m;
+% -- userWizard.m;
+% - Add RGB colorspace: 
 % -- RGB added as a cs option (SHINE_color);
-% -- RGB channels stored as a cell array (readImages);
-% -- Iterate between rgb channels (lumMatch, ADD.............)
-%
-% - describe new functions
+% -- Transformations applied to each RGB channel;
+% -- diag_plots on each RGB channel;
+% -- lum_calc on each RGB channel;
+% -- Provide RMSE and SSIM to each RGB channel; TO-DO 
 %
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
@@ -368,7 +374,9 @@ fprintf(['Please cite: \n',...
     'Controlling low-level image properties: The SHINE toolbox.\n',... 
     'Behavior Research Methods, 42(3), 671?684. http://doi.org/10.3758/BRM.42.3.671\n'])
 
+disp(' ')
 fprintf('MIT License, Copyright (c) 2021 Rodrigo Dal Ben')
+disp(' ')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
