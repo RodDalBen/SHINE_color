@@ -69,7 +69,7 @@
 % Three customs functions are used:
 % v2scale: convert RGB to HSV and scale the Value channel (0-1) to 0-255;
 % scale2v: rescale values from 0-255 to 0-1;
-% lum_calc: calculates the Value channel values of the original and new
+% lumCalc: calculates the Value channel values of the original and new
 % images (the output is a .txt file saved on the images output folder).
 %
 % The major adaptations were made on the "readImages" function.
@@ -109,14 +109,14 @@
 % Updates & improvements:
 % - Require selection to every prompt (except for prompts with default values);
 % - Require at least 2 images to advance;
-% - Fix the pooled SD calculation from 'lum_calc';
-% - Update 'lum_calc' output, now with a single pre vs. pos file;
+% - Fix the pooled SD calculation from 'lumCalc';
+% - Update 'lumCalc' output, now with a single pre vs. pos file;
 % - Add CIELab colorspace;
 % - Update functions' input to account for new colorspace (e.g., sfPlot, spectrumPlot); 
 % - 'v2scale' is now 'lum2scale';
 % - 'scale2v' is now 'scale2lum';
 % - Add 'DIAGNOSTICS' subfolder in 'SHINE_color_OUTPUT', for storing img stats and diag plots;
-% - Add a new function 'diag_plots' for img input;
+% - Add a new function 'diagPlots' for img input;
 %
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
@@ -125,7 +125,7 @@
 % (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
 %
 % Updates & improvements:
-% - Updates on lum_calc & diag_plots functions;
+% - Updates on lumCalc & diagPlots functions;
 %
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
@@ -146,8 +146,8 @@
 % - Add RGB colorspace: 
 % -- RGB added as a cs option (SHINE_color);
 % -- Transformations applied to each RGB channel;
-% -- diag_plots on each RGB channel;
-% -- lum_calc on each RGB channel;
+% -- diagPlots on each RGB channel;
+% -- lumCalc on each RGB channel;
 % -- Provide RMSE and SSIM to each RGB channel; TO-DO 
 %
 % Kindly report any suggestions or corrections on the adaptations to
@@ -330,23 +330,23 @@ fprintf('SSIM:     %d\n',SSIM)
 % plots
 
 if cs == 1 % SHINE_color: HSV
-    lum_calc(channel3, channel3_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
+    lumCalc(channel3, channel3_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
     if y_n_plot == 1
-    diag_plots(channel3, channel3_mod, imname, cs, mode); % SHINE_color: diagnostic plots
+    diagPlots(channel3, channel3_mod, imname, cs, mode); % SHINE_color: diagnostic plots
     end
 elseif cs == 2 %SHINE_color: CIELab
-    lum_calc(channel1, channel1_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
+    lumCalc(channel1, channel1_mod, imname, cs); % SHINE_color: luminance calculation for original and manipulated images
     if y_n_plot == 1
-    diag_plots(channel1, channel1_mod, imname, cs, mode); % SHINE_color: diagnostic plots
+    diagPlots(channel1, channel1_mod, imname, cs, mode); % SHINE_color: diagnostic plots
     end
 elseif cs == 3 %SHINE_color: RGB
-    lum_calc(channel1, channel1_mod, imname, cs, 'R'); % SHINE_color: luminance calculation for original and manipulated images
-    lum_calc(channel2, channel2_mod, imname, cs, 'G'); % ADD RGB CHANNEL TO TAG
-    lum_calc(channel3, channel3_mod, imname, cs, 'B'); 
+    lumCalc(channel1, channel1_mod, imname, cs, 'R'); % SHINE_color: luminance calculation for original and manipulated images
+    lumCalc(channel2, channel2_mod, imname, cs, 'G'); % ADD RGB CHANNEL TO TAG
+    lumCalc(channel3, channel3_mod, imname, cs, 'B'); 
     if y_n_plot == 1
-    diag_plots(channel1, channel1_mod, imname, cs, mode, 'R'); % SHINE_color: diagnostic plots
-    diag_plots(channel2, channel2_mod, imname, cs, mode, 'G'); 
-    diag_plots(channel3, channel3_mod, imname, cs, mode, 'B');
+    diagPlots(channel1, channel1_mod, imname, cs, mode, 'R'); % SHINE_color: diagnostic plots
+    diagPlots(channel2, channel2_mod, imname, cs, mode, 'G'); 
+    diagPlots(channel3, channel3_mod, imname, cs, mode, 'B');
     end
 end
 

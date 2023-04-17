@@ -33,7 +33,7 @@
 % ------------------------------------------------------------------------
 
 
-function diag_plots(images_orig, images, imname, cs, mode, rgb_channel)
+function diagPlots(images_orig, images, imname, cs, mode, rgb_channel)
 
 % set input and output dir
 output_folder_diagnostics = fullfile(pwd,'SHINE_color_OUTPUT', 'DIAGNOSTICS');
@@ -43,10 +43,10 @@ md = mode;
 
 % set initial msg
 if md == 1
-    disp('Progress: diag_plots not available for luminance match');
+    disp('Progress: diagPlots not available for luminance match');
     return
 else
-    disp('Progress: diag_plots in progress, please wait');
+    disp('Progress: diagPlots in progress, please wait');
 end
 
 % set mode for 2 graphs
@@ -170,15 +170,15 @@ if md ~= 1
 
 % final msgs
 if mode == 2
-    disp('Progress: diag_plots sucessful (histogram)');
+    disp('Progress: diagPlots sucessful (histogram)');
 elseif mode == 3
-    disp('Progress: diag_plots sucessful (spatial frequency)');
+    disp('Progress: diagPlots sucessful (spatial frequency)');
 elseif mode == 4
-    disp('Progress: diag_plots sucessful (spectrum)');
+    disp('Progress: diagPlots sucessful (spectrum)');
 elseif mode == 5 || mode == 7
-    disp('Progress: diag_plots sucessful (histogram and spatial frequency)');
+    disp('Progress: diagPlots sucessful (histogram and spatial frequency)');
 elseif mode == 6 || mode == 8
-    disp('Progress: diag_plots sucessful (histogram and spectrum)');
+    disp('Progress: diagPlots sucessful (histogram and spectrum)');
 end
 
 % final

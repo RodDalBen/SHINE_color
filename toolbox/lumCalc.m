@@ -1,5 +1,5 @@
 %
-% lum_calc, January 2019
+% lumCalc, January 2019
 % (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
 %
 % Adapted to be integrated with SHINE_color toolbox on February 2019 
@@ -42,7 +42,7 @@
 % ------------------------------------------------------------------------
 
 
-function lum_calc (images_orig, images, imname, cs, rgb_channel)
+function lumCalc (images_orig, images, imname, cs, rgb_channel)
 % Set output folder
 output_folder_diagnostics = fullfile(pwd,'SHINE_color_OUTPUT', 'DIAGNOSTICS');
 
@@ -114,7 +114,7 @@ fprintf(statistics_pre_post, '%s\t%.4f\t%.4f\t%s\t%.4f\t%.4f', img1, M_pre, Sd_p
 fclose('all'); 
 
 % Display progress msg on Command window
-disp('Progress: lum_calc sucessful') 
+disp('Progress: lumCalc sucessful') 
 disp('Progress: summary stats are in OUTPUT/DIAGNOSTICS');
 
 end
