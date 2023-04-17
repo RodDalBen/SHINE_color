@@ -268,9 +268,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: scale luminance, calculate RMSE and SSIM
 
-rmsqe_all = 0;
-mssim_all = 0;
-
+if cs == 1 || cs == 2
+    rmsqe_all = 0;
+    mssim_all = 0;
+elseif cs == 3
+    rmsqe_all_r = 0;
+    mssim_all_r = 0;
+    
+    rmsqe_all_g = 0;
+    mssim_all_g = 0;
+    
+    rmsqe_all_b = 0;
+    mssim_all_b = 0;
+end
 
 for im = 1:numim
     if nargout == 0
@@ -280,9 +290,10 @@ for im = 1:numim
                 channel3_mod{im} = scale2lum(channel3_mod{im}, cs); % SHINE_color: channel created on readImages.m
                 % SHINE_color: create a color image (from HSV, CIELab, or RGB)
                 color_im = cat(3, channel1{im}, channel2{im}, channel3_mod{im});
-                 % SHINE_color: transform HSV or CIELab to RGB and create label
+                % SHINE_color: transform HSV or CIELab to RGB and create label
                 color_im = hsv2rgb(color_im);
                 cs_tag = 'hsv_';
+                % SHINE_color: calculate rmse and ssim
                 rmsqe = getRMSE(channel3{im},channel3_mod{im});
                 rmsqe_all = rmsqe_all+rmsqe;
                 mssim = ssim_index(channel3{im},channel3_mod{im});
@@ -295,35 +306,71 @@ for im = 1:numim
                  % SHINE_color: transform HSV or CIELab to RGB and create label
                 color_im = lab2rgb(color_im);
                 cs_tag = 'cielab_';
+                % SHINE_color: calculate rmse and ssim
                 rmsqe = getRMSE(channel1{im},channel1_mod{im});
                 rmsqe_all = rmsqe_all+rmsqe;
                 mssim = ssim_index(channel1{im},channel1_mod{im});
                 mssim_all = mssim_all+mssim;
                 
              elseif cs == 3 % SHINE_color: RGB
-                 % SHINE_color: create a color image (from HSV, CIELab, or RGB)
-                 color_im = cat(3, channel1_mod{im}, channel2_mod{im}, channel3_mod{im});
-                 cs_tag = 'rgb_'; 
-                 
-                 %how to calculate RMSE for rgb?
+                % SHINE_color: create a color image (from HSV, CIELab, or RGB)
+                color_im = cat(3, channel1_mod{im}, channel2_mod{im}, channel3_mod{im});
+                cs_tag = 'rgb_'; 
+                % SHINE_color: Red channel
+                rmsqe_r = getRMSE(channel1{im},channel1_mod{im});
+                rmsqe_all_r = rmsqe_all_r+rmsqe_r;
+                mssim_r = ssim_index(channel1{im},channel1_mod{im});
+                mssim_all_r = mssim_all_r+mssim_r;
+                % SHINE_color: Green channel
+                rmsqe_g = getRMSE(channel2{im},channel2_mod{im});
+                rmsqe_all_g = rmsqe_all_g+rmsqe_g;
+                mssim_g = ssim_index(channel2{im},channel2_mod{im});
+                mssim_all_g = mssim_all_g+mssim_g;
+                % SHINE_color: Blue channel
+                rmsqe_b = getRMSE(channel3{im},channel3_mod{im});
+                rmsqe_all_b = rmsqe_all_b+rmsqe_b;
+                mssim_b = ssim_index(channel3{im},channel3_mod{im});
+                mssim_all_b = mssim_all_b+mssim_b;              
             end
-                   
-            % SHINE_color: SHINE original command, deprecated
-            %imwrite(images{im},fullfile(output_folder,strcat('SHINE_color_d_',num2str(im),'.tif'))); 
             
             % SHINE_color: writing the colorful image
             imwrite(color_im,fullfile(output_folder,strcat('SHINE_color_',cs_tag, num2str(im),'.png'))); 
-    end
-    %mssim_all = mssim_all+mssim; %uncomment will break for RGB
-
+    end  
 end
 
-RMSE = rmsqe_all/numim;
-SSIM = mssim_all/numim;
+if cs == 1 || cs == 2
+    
+    RMSE = rmsqe_all/numim;
+    SSIM = mssim_all/numim;
+    
+    disp(' ')
+    fprintf('RMSE:     %d\n',RMSE)
+    fprintf('SSIM:     %d\n',SSIM)
+    disp(' ')
 
-disp(' ')
-fprintf('RMSE:     %d\n',RMSE)
-fprintf('SSIM:     %d\n',SSIM)
+else 
+    
+    RMSE_R = rmsqe_all_r/numim;
+    SSIM_R = mssim_all_r/numim;
+    
+    RMSE_G = rmsqe_all_g/numim;
+    SSIM_G = mssim_all_g/numim;
+    
+    RMSE_B = rmsqe_all_b/numim;
+    SSIM_B = mssim_all_b/numim;
+    
+    disp(' ')
+    fprintf('RMSE, Red:     %d\n',RMSE_R)
+    fprintf('SSIM, Red:     %d\n',SSIM_R)
+    disp(' ')
+    fprintf('RMSE, Green:     %d\n',RMSE_G)
+    fprintf('SSIM, Green:     %d\n',SSIM_G)
+    disp(' ')
+    fprintf('RMSE, Blue:     %d\n',RMSE_B)
+    fprintf('SSIM, Blue:     %d\n',SSIM_B) 
+    disp(' ')
+
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: calculate pre-pos stats for each image, create diagnostic
