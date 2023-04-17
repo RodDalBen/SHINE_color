@@ -40,6 +40,11 @@
 % post). Previous versions re-read & transformed rgb images;
 % - Luminace is calculated and reported in greyscale (0-255).
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, April 2023, version 0.0.5
+% (c) Rodrigo Dal Ben
+%
+% - Rename function lum_calc to lumCalc.
+% ------------------------------------------------------------------------
 
 
 function lumCalc (images_orig, images, imname, cs, rgb_channel)

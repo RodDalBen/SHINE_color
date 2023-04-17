@@ -19,7 +19,7 @@
 %     of values between 0 and 254)
 %
 % OUTPUT:
-% (1) images: optional; SHINEd images stored in a cell
+% (1) images: optional; SHINE images stored in a cell
 %
 % Alternatively, SHINE can be used to load and save the images
 % automatically:
@@ -130,14 +130,14 @@
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
-% SHINE_color toolbox, March 2023, version 0.0.5
+% SHINE_color toolbox, April 2023, version 0.0.5
 % (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
 %
 % Updates & improvements:
 % - Functional command line call, input is read by readImages; 
 % - Streamline readImages.m and deprecated lum2scale.m;
 % - Remove image reading and preprocessing from individual functions;
-% - Streamline comments, descriptions, and standardize function naming; TO-DO
+% - Streamline comments, descriptions, and standardize function naming;
 % - Add license info to main script;
 % - Make main script modular, added: 
 % -- displayInfo.m; 

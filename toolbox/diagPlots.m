@@ -16,20 +16,13 @@
 % - Plots are now done directly on the manipulated channels (pre and
 % post). The previous version re-read & transformed rgb images.
 % ------------------------------------------------------------------------
-% SHINE_color toolbox, August 2022, version 0.0.5
+% SHINE_color toolbox, March 2023, version 0.0.5
 % (c) Rodrigo Dal Ben
 %
-% - Display luminance statistics (mean and standard deviation) on plots. -
-% TO-DO
-% - ADD one plot per each channel of the RGB; 6 columns vs. 2 columns
-% (actual)
-% ------------------------------------------------------------------------
-% SHINE_color toolbox, March 2023, version 0.0.5 - TODO!
-% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
-%
-% Remove cs from:
-% - sfPlot
-% - 
+% - Rename function diag_plot to diagPlot.
+% - Display luminance statistics (mean and standard deviation) on plots.
+% - Streamline image transformations by forcing readImages call.
+% - One plot per RGB channel
 % ------------------------------------------------------------------------
 
 

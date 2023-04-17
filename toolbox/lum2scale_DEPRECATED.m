@@ -28,6 +28,9 @@
 % ------------------------------------------------------------------------
 
 function y = lum2scale(x, cs)
+
+disp('Function deprecated, check readImages for most up to date function.')
+
 if size(x,3)==3
     if cs == 1 % HSV
         hsv = rgb2hsv(x);
