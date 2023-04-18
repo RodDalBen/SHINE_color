@@ -47,7 +47,7 @@ while im_vid ~= 1 && im_vid ~= 2
     im_vid = input(prompt);
     if isempty(im_vid) == 1 % SHINE_color: forced choice
         disp(quitmsg)
-        return;
+        error('Please select an option');
     end 
 end
 
@@ -59,12 +59,12 @@ if im_vid == 2
     y_n = input(prompt);
         if isempty(y_n) == 1 % SHINE_color: forced choice
             disp(quitmsg)
-            return;
+            error('Please select an option');
         end 
     end
         if y_n == 2
             disp('Error: the INPUT folder must contain only one video and the OUTPUT folder must be empty');
-            return
+            error('Error: the INPUT folder must contain only one video and the OUTPUT folder must be empty');
         else
             prompt = 'Type the video format    [e.g., mp4, avi]: ';
             video_format = input(prompt,'s');
@@ -78,7 +78,7 @@ if im_vid == 2
     videoList = dir(fullfile(input_folder, strcat('*.', video_format)));
     if length(videoList) > 1
         disp('Error: The INPUT folder must contain only one video at a time.')
-        return
+        error('Error: The INPUT folder must contain only one video at a time.');
     end
 
     [frame_rate] = video2frames(input_folder, video_format);
@@ -87,7 +87,7 @@ if im_vid == 2
         cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
         if isempty(cs) == 1
             disp(quitmsg);
-            return
+            error('Please select an option');
         end
     end
     
@@ -105,7 +105,7 @@ elseif im_vid == 1
     cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
         if isempty(cs) == 1
             disp(quitmsg);
-            return
+            error('Please select an option');
         end
     end
     
@@ -113,7 +113,7 @@ elseif im_vid == 1
     y_n_plot = input('Do you want diagnostic plots? (may take some time)    [1=yes, 2=no]: ');
         if isempty(y_n_plot) == 1
             disp(quitmsg);
-            return
+            error('Please select an option');
         end
     end
     
@@ -126,7 +126,7 @@ while temp ~= 1 && temp ~= 2
     temp = input('SHINE_color options    [1=default, 2=custom]: ');
     if isempty(temp) == 1
         disp(quitmsg)
-        return;
+        error('Please select an option');
     end
 end
 
@@ -137,7 +137,7 @@ if temp == 2
         temp = input('Matching mode    [1=luminance, 2=spatial frequency, 3=both]: ');
         if isempty(temp) == 1 
             disp(quitmsg)
-            return;
+            error('Please select an option');
         end
     end
     
@@ -146,14 +146,14 @@ if temp == 2
             md = input('Luminance option [1=lumMatch, 2=histMatch]: ');
             if isempty(md) == 1 
                 disp(quitmsg)
-                return;
+                error('Please select an option');
             end
             if md == 2
                 while optim ~= 2 && optim ~= 3
                 optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
                 if isempty(optim) == 1 
                     disp(quitmsg)
-                    return;
+                    error('Please select an option');
                 end 
                 end
             end
@@ -164,7 +164,7 @@ if temp == 2
             md = 2+input('Spectrum options [1=sfMatch, 2=specMatch]: ');
             if isempty(md) == 1
                 disp(quitmsg)
-                return;
+                error('Please select an option');
             end
         end
         
@@ -173,7 +173,7 @@ if temp == 2
             md = 4+input('Matching of both [1=hist&sf, 2=hist&spec, 3=sf&hist, 4=spec&hist]: ');
             if isempty(md) == 1
                 disp(quitmsg)
-                return;
+                error('Please select an option');
             end 
         end
         
@@ -181,7 +181,7 @@ if temp == 2
             optim = 1+input('Optimize SSIM    [1=no, 2=yes]: ');
             if isempty(optim) == 1
                 disp(quitmsg)
-                return;
+                error('Please select an option');
             end
         end
         optim = optim-2;
@@ -195,12 +195,12 @@ if temp == 2
 
     mode = md;
 
-    if temp == 1 || temp == 3
+    if (temp == 1 || temp == 3) && cs ~= 3
         while wim ~= 1 && wim ~= 2
             wim = input('Matching region  [1=whole image, 2=foreground/background]: ');
             if isempty(wim) == 1
                 disp(quitmsg)
-                return;
+                error('Please select an option');
             end
         end
         if wim == 2
@@ -209,7 +209,7 @@ if temp == 2
                 wim = 1+input('Segmentation of: [1=source images, 2=template(s)]: ');
                 if isempty(wim) == 1
                     disp(quitmsg)
-                    return;
+                    error('Please select an option');
                 end
             end
             if wim == 2
@@ -217,7 +217,7 @@ if temp == 2
                     backg = input('Image background [1=specify lum, 2=find automatically (most frequent lum in the image)]: ');
                     if isempty(backg) == 1
                         disp(quitmsg)
-                        return;
+                        error('Please select an option');
                     end
                 end
             else
@@ -225,7 +225,7 @@ if temp == 2
                     backg = input('Templ background [1=specify lum, 2=find automatically (most frequent lum in the template)]: ');
                     if isempty(backg) == 1
                         disp(quitmsg)
-                        return;
+                        error('Please select an option');
                     end
                 end
             end
@@ -235,7 +235,7 @@ if temp == 2
                     backg = input('Enter lum value  [integer between 0 and 255]: ');
                     if isempty(backg) == 1
                         disp(quitmsg)
-                        return;
+                        error('Please select an option');
                     end
                 end
             else
