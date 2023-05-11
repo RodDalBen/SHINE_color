@@ -84,8 +84,12 @@ for im = 1:nim
     info = imfinfo(fullfile(pathname,all_images{im}{1}));
     
     if strcmp(info.ColorType(1:4),'gray')==1
-        channel_grey{im} = im1; % SHINE_color: grey channel
-        imname{im} = all_images{im}{1};
+        fprintf(['\nPlease provide colorful images.\n\n',...
+            'Refer to the SHINE toolbox for greyscale manipulations:\n'...
+            'Willenbockel, V., Sadr, J., Fiset, D., Horne, G. O., Gosselin, F., & Tanaka, J. W. (2010).\n',...
+            'Controlling low-level image properties: The SHINE toolbox.\n',... 
+            'Behavior Research Methods, 42(3), 671?684. http://doi.org/10.3758/BRM.42.3.671\n\n'])
+        error('Please provide colorful images.');
     
     elseif strcmp(info.ColorType(1:4),'true')==1
     if cs == 1 % SHINE_color: HSV

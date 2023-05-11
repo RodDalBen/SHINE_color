@@ -83,11 +83,17 @@ if im_vid == 2
 
     [frame_rate] = video2frames(input_folder, video_format);
     
-    while cs ~= 1 && cs ~= 2 && cs ~= 3
-        cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
+    while cs ~= 1 && cs ~= 2 && cs ~= 3 && cs ~= 4
+        cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB, 4=Greyscale]: ');
         if isempty(cs) == 1
             disp(quitmsg);
             error('Please select an option');
+        elseif cs == 4
+            fprintf(['\nPlease refer to the SHINE toolbox for greyscale manipulations:\n'...
+                'Willenbockel, V., Sadr, J., Fiset, D., Horne, G. O., Gosselin, F., & Tanaka, J. W. (2010).\n',...
+                'Controlling low-level image properties: The SHINE toolbox.\n',... 
+                'Behavior Research Methods, 42(3), 671?684. http://doi.org/10.3758/BRM.42.3.671\n\n'])
+            error('Please select another colorspace.');
         end
     end
     
@@ -107,11 +113,18 @@ elseif im_vid == 1
     end
     
     while cs ~= 1 && cs ~= 2 && cs ~= 3
-    cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB]: ');
+    cs = input('Select the colorspace to perform the manipulations    [1=HSV, 2=CIELab, 3=RGB, 4=Greyscale]: ');
         if isempty(cs) == 1
             disp(quitmsg);
             error('Please select an option');
-        end
+        elseif cs == 4
+            fprintf(['\nPlease refer to the SHINE toolbox for greyscale manipulations:\n'...
+                'Willenbockel, V., Sadr, J., Fiset, D., Horne, G. O., Gosselin, F., & Tanaka, J. W. (2010).\n',...
+                'Controlling low-level image properties: The SHINE toolbox.\n',... 
+                'Behavior Research Methods, 42(3), 671?684. http://doi.org/10.3758/BRM.42.3.671\n\n'])
+            error('Please select another colorspace.');
+        
+    end
     end
     
     while y_n_plot ~= 1 && y_n_plot ~= 2
