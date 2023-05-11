@@ -63,6 +63,13 @@ elseif cs == 3 % lab
     cs_tag = strcat('rgb_',rgb_channel,'_');
 end
 
+% scale HSV and CIELab images
+for z = 1:numim
+    if cs == 1 || cs == 2 % hsv or cielab
+        images{z} = lum2scale(images{z}, cs);
+    end   
+end
+
 % Open output .txt
 statistics_pre_post = fopen([output_folder_diagnostics filesep strcat(cs_tag, 'img_stats_pre_post.txt')], 'wt');
 

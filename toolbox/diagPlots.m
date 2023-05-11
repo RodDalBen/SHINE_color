@@ -69,6 +69,13 @@ nummd = length(md2);
 j = 1:2:numim*2;
 k = 2:2:numim*2;
 
+% scale HSV and CIELab images
+for z = 1:numim
+    if cs == 1 || cs == 2 % hsv or cielab
+        images{z} = lum2scale(images{z}, cs);
+    end   
+end
+
 % set number of figures
 if md ~= 1
     for h = 1:nummd
@@ -87,7 +94,7 @@ if md ~= 1
                 % for a bar plot with thicker bars, uncomment next 2 lines and comment 'imhist'
                 %[counts, grayLevels] = imhist(images_orig{i}, 256);
                 %bar(grayLevels, counts, 'BarWidth', 5),
-                imhist(images_orig{i});
+                imhist(images_orig{i});             
                 title(imname{i}, 'FontSize', 8);              
                 % luminance statistics 
                 text(0.4, 0.85, sprintf('M = %d, SD = %d',...
@@ -96,12 +103,12 @@ if md ~= 1
   
             elseif md == 3
                 plot_name = '_spatial_freq_pre_post';
-                sfPlot(images_orig{i}, true, true); 
+                sfPlot(images_orig{i}, true, true);                         
                 title(imname{i}, 'FontSize', 8)
             
             elseif md == 4
                 plot_name = '_spectrum_pre_post';
-                spectrumPlot(images_orig{i}, true, true); 
+                spectrumPlot(images_orig{i}, true, true);
                 title(imname{i}, 'FontSize', 8)                     
             end
             % set axis limits

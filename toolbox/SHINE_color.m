@@ -422,7 +422,7 @@ fprintf(['Please cite: \n',...
     'Behavior Research Methods, 42(3), 671?684. http://doi.org/10.3758/BRM.42.3.671\n'])
 
 disp(' ')
-fprintf('MIT License, Copyright (c) 2021 Rodrigo Dal Ben')
+fprintf('MIT License, Copyright (c) 2023 Rodrigo Dal Ben')
 disp(' ')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
