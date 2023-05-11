@@ -99,6 +99,11 @@ elseif im_vid == 1
     if isempty(imformat)
       imformat = 'jpg';
       disp('jpg as default');
+    elseif imformat == 'png'
+      fprintf(['\nPlease note that our toolbox does not support transparent backgrounds.\n',...
+          'Transparent backgrounds will be converted during manipulations.\n',...
+          'Please manipulate the fore and background separately, and then remove the background\n',...
+          'in an image processing software (e.g., GIMP).\n\n']);  
     end
     
     while cs ~= 1 && cs ~= 2 && cs ~= 3
