@@ -135,10 +135,13 @@
 %
 % Updates & improvements:
 % - Functional command line call, input is read by readImages; 
-% - Streamline readImages.m and deprecated lum2scale.m;
+% - Streamline readImages.m
+% - Streamline lum2scale.m;
 % - Remove image reading and preprocessing from individual functions;
 % - Streamline comments, descriptions, and standardize function naming;
 % - Add license info to main script;
+% - Add Command Window log (diary);
+% - Add message redirecting users to SHINE in case of greyscale input;
 % - Make main script modular, added: 
 % -- displayInfo.m; 
 % -- processImage.m;
@@ -148,7 +151,8 @@
 % -- Transformations applied to each RGB channel;
 % -- diagPlots on each RGB channel;
 % -- lumCalc on each RGB channel;
-% -- Provide RMSE and SSIM to each RGB channel; TO-DO 
+% -- Provide RMSE and SSIM to each RGB channel;
+% 
 %
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
@@ -157,8 +161,19 @@
 
 function images = SHINE_color(inputpath, outputpath, extension, cs, im_vid, plots)
 
-% SHINE_color: default values for call from command line
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: start a log of the Command Window, try-catch closes the log
+% in case of errors
+
+try
+
+diary(fullfile(pwd,'SHINE_color_OUTPUT', 'command_window_log'))
+disp(' ')
+disp(['SHINE_color - Log created on ' char(datetime)])
+disp(' ')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: default values for call from command line
 % If desired, the default values can be changed here:
 
 it = 1;           % number of iterations (default = 1)
@@ -409,10 +424,13 @@ end
 disp(' ')
 disp('All done, please remember to check your Monitor calibration to ensure proper luminance display.')
 disp(' ')
+fprintf('A log of the Command Window is avaialable on the SHINE_color_OUTPUT folder.')
+disp(' ')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: display citation and license
 
+disp(' ')
 fprintf(['Please cite: \n',... 
     'Dal Ben, R. (2021, July 5). SHINE_color: controlling low-level properties of colorful images. \n',...
     'PsyArXiv: https://doi.org/10.31234/osf.io/fec6x \n',...
@@ -426,7 +444,24 @@ fprintf('MIT License, Copyright (c) 2023 Rodrigo Dal Ben')
 disp(' ')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: turn off Command Window log
+diary off;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if nargout < 1
     clear images
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SHINE_color: turn off Command Window log
+catch e 
+    fprintf(1,'Error: %s', e.message);
+    disp(' ')
+    diary off;
+    disp(' ')
+    fprintf('A log of the Command Window is avaialable on the SHINE_color_OUTPUT folder.\n')
+    rethrow(e)
+end
+    
+
