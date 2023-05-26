@@ -153,7 +153,6 @@
 % -- lumCalc on each RGB channel;
 % -- Provide RMSE and SSIM to each RGB channel;
 % 
-%
 % Kindly report any suggestions or corrections on the adaptations to
 % dalbenwork@gmail.com
 % ------------------------------------------------------------------------
