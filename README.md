@@ -1,40 +1,10 @@
 ## SHINE_color
 
-Please, send suggestions and doubts to <dalbenwork@gmail.com>
+See release notew below. Please, send suggestions and doubts to <dalbenwork@gmail.com>
 
 ***
 
-Update, October 2021, version 0.0.4:
-
-Updates & improvements:
-- `lum_calc` is calculated directly from the input and output luminance channel. Previous versions re-read rgb images, transformed it to hsv or CIELab, and then calculated statistics. The new function is more accurate and faster;
-- `diag_plots` plots luminance information directly from the input and output luminance channel. The previous versions re-read rgb images, transformed it to hsv or CIELab, and then plotted the luminance information. The new function is more accurate and faster.
-
-***
-
-Update, September 2021, version 0.0.3:
-
-Updates & improvements:
-- Require input to every prompt (except for prompts with default values);
-- When dealing with images, require at least 2 images to advance;
-- Fix the pooled SD calculation from `lum_calc`;
-- Update `lum_calc` output, now with pre vs. pos summary in a single file;
-- Add option for CIELab colorspace;
-- Update functions' input to account for new colorspace (e.g., `sfPlot`, `spectrumPlot`);
-- `v2scale` is now `lum2scale`;
-- `scale2v` is now `scale2lum`;
-- Add `DIAGNOSTICS` subfolder in `SHINE_color_OUTPUT`, for storing img stats and diag plots;
-- Add a new function `diag_plots` for diagnostic plots of operations with images.
-
-***
-
-Update, April 2019, version 0.0.2:
-
-The new version of the `SHINE_color` now handles video files. If a video file is provided, all frames will be extracted, `SHINE_color` operations will be performed on each frame, and the video will be re-created with the manipulated frames.
-
-***
-
-An adaptation of the `SHINE` toolbox, dubbed `SHINE_color`. This adaptation allows to apply all `SHINE` transformations to colorful images. It does so by converting rgb images into hsv color space, extracting and scaling the Value channel, and, after the transformations are performed, rescale the channel and concatenate it with Hue and Saturation channels to create a colorful image with the new luminance.
+SHINE_color is an adaptation of the `SHINE` toolbox. This adaptation allows to apply all `SHINE` transformations to colorful images. It does so by converting rgb images into hsv color space, extracting and scaling the Value channel, and, after the transformations are performed, rescale the channel and concatenate it with Hue and Saturation channels to create a colorful image with the new luminance.
 
 All documentation of `SHINE` toolbox is extensible to the `SHINE_color` adaptation. It also works in a similar way, except that it can be launched from the current working directory and the user must provide the image format.
 
@@ -42,7 +12,7 @@ As for the outputs, colorful images with new luminance will be saved in the outp
 
 For illustration purposes, the input folder contains 4 pictures from the NOUN database. Furthermore, NOUN images (Horst & Hout, 2016) with histogram matched (using SHINE_color) are available on the files tab.
 
-#### TUTORIAL
+#### STEP-BY-STEP
 
 If you have no experience with MATLAB, just follow these steps (images available on the files tab of the [OSF project](https://osf.io/auzjy/)):
 
@@ -67,3 +37,60 @@ NOUN database available at: http://www.sussex.ac.uk/wordlab/noun
 Willenbockel, V., Sadr, J., Fiset, D., Horne, G. O., Gosselin, F., & Tanaka, J. W. (2010). Controlling low-level image properties: The SHINE toolbox. Behavior Research Methods, 42(3), 671–684. http://doi.org/10.3758/BRM.42.3.671
 
 Horst, J. S., & Hout, M. C. (2016). The Novel Object and Unusual Name (NOUN) Database: A collection of novel images for use in experimental research. Behavior Research Methods, 48(4), 1393–1409. http://doi.org/10.3758/s13428-015-0647-3
+
+***
+
+Update, April 2023, version 0.0.5
+
+Updates & improvements:
+- Functional command line call, input is read by readImages; 
+- Streamline readImages.m
+- Streamline lum2scale.m;
+- Remove image reading and preprocessing from individual functions;
+- Streamline comments, descriptions, and standardize function naming;
+- Add license info to main script;
+- Add Command Window log (diary);
+- Add message redirecting users to SHINE in case of greyscale input;
+- Make main script modular, added: 
+-- displayInfo.m; 
+-- processImage.m;
+-- userWizard.m;
+- Add RGB colorspace: 
+-- RGB added as a cs option (SHINE_color);
+-- Transformations applied to each RGB channel;
+-- diagPlots on each RGB channel;
+-- lumCalc on each RGB channel;
+-- Provide RMSE and SSIM to each RGB channel;
+
+***
+
+Update, October 2021, version 0.0.4
+
+Updates & improvements:
+- `lum_calc` is calculated directly from the input and output luminance channel. Previous versions re-read rgb images, transformed it to hsv or CIELab, and then calculated statistics. The new function is more accurate and faster;
+- `diag_plots` plots luminance information directly from the input and output luminance channel. The previous versions re-read rgb images, transformed it to hsv or CIELab, and then plotted the luminance information. The new function is more accurate and faster.
+
+***
+
+Update, September 2021, version 0.0.3
+
+Updates & improvements:
+- Require input to every prompt (except for prompts with default values);
+- When dealing with images, require at least 2 images to advance;
+- Fix the pooled SD calculation from `lum_calc`;
+- Update `lum_calc` output, now with pre vs. pos summary in a single file;
+- Add option for CIELab colorspace;
+- Update functions' input to account for new colorspace (e.g., `sfPlot`, `spectrumPlot`);
+- `v2scale` is now `lum2scale`;
+- `scale2v` is now `scale2lum`;
+- Add `DIAGNOSTICS` subfolder in `SHINE_color_OUTPUT`, for storing img stats and diag plots;
+- Add a new function `diag_plots` for diagnostic plots of operations with images.
+
+***
+
+Update, April 2019, version 0.0.2
+
+The new version of the `SHINE_color` now handles video files. If a video file is provided, all frames will be extracted, `SHINE_color` operations will be performed on each frame, and the video will be re-created with the manipulated frames.
+
+***
+
