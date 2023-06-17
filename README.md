@@ -1,6 +1,6 @@
 ## SHINE_color
 
-See release notew below. Please, send suggestions and doubts to <dalbenwork@gmail.com>
+See release notes below. Please, send suggestions and doubts to <dalbenwork@gmail.com>
 
 ***
 
