@@ -15,7 +15,7 @@
 % adapted by Rodrigo Dal Ben
 % 
 % The function now only lists files with the .png extension.
-
+% ------------------------------------------------------------------------
 
 function fname = getAllFilesInFolder(output_folder)
 

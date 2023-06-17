@@ -45,14 +45,16 @@
 %   - lum2scale function
 %   - cs & diag input
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Remove transformations, all is done under readImages
+% ------------------------------------------------------------------------
 
-function avg = sfPlot(im, qplot, cs, diag)
+function avg = sfPlot(im, qplot, diag)
 
 if nargin < 2 
     qplot = true;
-end
-if ndims(im) == 3
-    im = lum2scale(im, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
 end
 [xs ys] = size(im);
 fftim = abs(fftshift(fft2(double(im)))).^2;

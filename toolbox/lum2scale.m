@@ -26,19 +26,20 @@
 % - Renamed the function from 'v2scale' to 'lum2scale' to account for both
 % colorspaces.
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% adapted by Rodrigo Dal Ben
+%
+% ReadImages now performs:
+% - RGB to HSV or CIELab transformation, channel extraction, scaling
+% ------------------------------------------------------------------------
 
 function y = lum2scale(x, cs)
-if size(x,3)==3
-    if cs == 1 % HSV
-        hsv = rgb2hsv(x);
-        v = hsv(:,:,3);
-        y = uint8(v*255);
-        
-    elseif cs == 2 % CIELab
-        lab = rgb2lab(x);
-        l = lab(:,:,1);
-        y = uint8(l*2.55);
-    end 
-else
-    error('Input must be a rgb')
+
+if cs == 1 % HSV
+    y = uint8(x*255);
+    
+elseif cs == 2 % CIELab
+    y = uint8(x*2.55);
+
+end
 end

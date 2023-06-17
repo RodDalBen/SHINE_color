@@ -49,12 +49,14 @@
 %
 % Replace 'rgb2gray' for 'lum2scale' function
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Remove transformations, all is done under readImages
+% ------------------------------------------------------------------------
 
 function [mask_fgr,mask_bgr,background] = separate(image,fig,background)
 
-if ndims(image) == 3
-    image = lum2scale(image, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
-end
 if nargin < 3 || background > 255 || background < 0
     background = image(find(max(imhist(image))));
 end

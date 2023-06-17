@@ -16,8 +16,17 @@
 % - Plots are now done directly on the manipulated channels (pre and
 % post). The previous version re-read & transformed rgb images.
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% (c) Rodrigo Dal Ben
+%
+% - Rename function diag_plot to diagPlot.
+% - Display luminance statistics (mean and standard deviation) on plots.
+% - Streamline image transformations by forcing readImages call.
+% - One plot per RGB channel
+% ------------------------------------------------------------------------
 
-function diag_plots(images_orig, images, imname, cs, mode)
+
+function diagPlots(images_orig, images, imname, cs, mode, rgb_channel)
 
 % set input and output dir
 output_folder_diagnostics = fullfile(pwd,'SHINE_color_OUTPUT', 'DIAGNOSTICS');
@@ -27,10 +36,10 @@ md = mode;
 
 % set initial msg
 if md == 1
-    disp('Progress: diag_plots not available for luminance match');
+    disp('Progress: diagPlots not available for luminance match');
     return
 else
-    disp('Progress: diag_plots in progress, please wait');
+    disp('Progress: diagPlots in progress, please wait');
 end
 
 % set mode for 2 graphs
@@ -45,8 +54,13 @@ end
 % set color space tag
 if cs == 1 % hsv
     cs_tag = 'hsv';
+    diag_title = {"Luminance channel HSV",'Pre vs. Post', ''}; %avoid overlay
 elseif cs == 2 % lab
     cs_tag = 'cielab';
+    diag_title = {"Luminance channel CIELab",'Pre vs. Post', ''};
+elseif cs == 3 % rgb
+    cs_tag = strcat('rgb_',rgb_channel);
+    diag_title = {strcat('Luminance channel RGB:', rgb_channel),'Pre vs. Post', ''};
 end
 
 % set img indices for loops
@@ -54,6 +68,13 @@ numim = length(images_orig);
 nummd = length(md2);
 j = 1:2:numim*2;
 k = 2:2:numim*2;
+
+% scale HSV and CIELab images
+for z = 1:numim
+    if cs == 1 || cs == 2 % hsv or cielab
+        images{z} = lum2scale(images{z}, cs);
+    end   
+end
 
 % set number of figures
 if md ~= 1
@@ -73,17 +94,21 @@ if md ~= 1
                 % for a bar plot with thicker bars, uncomment next 2 lines and comment 'imhist'
                 %[counts, grayLevels] = imhist(images_orig{i}, 256);
                 %bar(grayLevels, counts, 'BarWidth', 5),
-                imhist(images_orig{i});
-                title(imname{i}, 'FontSize', 8);
-            
+                imhist(images_orig{i});             
+                title(imname{i}, 'FontSize', 8);              
+                % luminance statistics 
+                text(0.4, 0.85, sprintf('M = %d, SD = %d',...
+                    round(mean2(images_orig{i})), round(std2(images_orig{i}))),...
+                    'Units', 'normalized', 'FontSize', 8);
+  
             elseif md == 3
                 plot_name = '_spatial_freq_pre_post';
-                sfPlot(images_orig{i}, true, cs, true); 
+                sfPlot(images_orig{i}, true, true);                         
                 title(imname{i}, 'FontSize', 8)
             
             elseif md == 4
                 plot_name = '_spectrum_pre_post';
-                spectrumPlot(images_orig{i}, true, cs, true); 
+                spectrumPlot(images_orig{i}, true, true);
                 title(imname{i}, 'FontSize', 8)                     
             end
             % set axis limits
@@ -96,36 +121,40 @@ if md ~= 1
                     %bar(grayLevels, counts, 'BarWidth', 5),
                     imhist(images{i});
                     title(strcat(cs_tag, '-', imname{i}), 'FontSize', 8);
+                    % luminance statistics 
+                    text(0.4, 0.85, sprintf('M = %d, SD = %d',...
+                    round(mean2(images{i})), round(std2(images{i}))),...
+                    'Units', 'normalized', 'FontSize', 8);
                     % common labs and title
                     labs = axes(fig,'visible','off'); 
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel','Pre vs. Post', ''}); % avoid overlay
+                    title(labs, diag_title); 
                     ylabel(labs,{'Number of Pixels', ''});
                     xlabel(labs,{'','Grayscale Luminance (0-255)'});  
                     
                 elseif md == 3         
-                    sfPlot(images{i}, true, cs, true);
+                    sfPlot(images{i}, true, true);
                     title(strcat(cs_tag, '-', imname{i}), 'FontSize', 8)
                     % common labs and title
                     labs = axes(fig,'visible','off'); 
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel', 'Pre vs. Post', ''});
+                    title(labs, diag_title);
                     ylabel(labs,{'Energy', ''});
                     xlabel(labs,{'','Spatial frequency (cycles/image)'});
                 
                 elseif md == 4
-                    spectrumPlot(images{i}, true, cs, true); 
+                    spectrumPlot(images{i}, true, true); 
                     title(strcat(cs_tag, '-', imname{i}), 'FontSize', 8)
                     % common labs and title
                     labs = axes(fig,'visible','off'); 
                     labs.Title.Visible='on';
                     labs.XLabel.Visible='on';
                     labs.YLabel.Visible='on';
-                    title(labs, {'Luminance channel', 'Pre vs. Post', ''});
+                    title(labs, diag_title);
                     ylabel(labs,{'Amplitude', ''}); 
                     xlabel(labs,{'','Amplitude'});
                 end
@@ -141,15 +170,15 @@ if md ~= 1
 
 % final msgs
 if mode == 2
-    disp('Progress: diag_plots sucessful (histogram)');
+    disp('Progress: diagPlots sucessful (histogram)');
 elseif mode == 3
-    disp('Progress: diag_plots sucessful (spatial frequency)');
+    disp('Progress: diagPlots sucessful (spatial frequency)');
 elseif mode == 4
-    disp('Progress: diag_plots sucessful (spectrum)');
+    disp('Progress: diagPlots sucessful (spectrum)');
 elseif mode == 5 || mode == 7
-    disp('Progress: diag_plots sucessful (histogram and spatial frequency)');
+    disp('Progress: diagPlots sucessful (histogram and spatial frequency)');
 elseif mode == 6 || mode == 8
-    disp('Progress: diag_plots sucessful (histogram and spectrum)');
+    disp('Progress: diagPlots sucessful (histogram and spectrum)');
 end
 
 % final

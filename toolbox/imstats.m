@@ -56,8 +56,13 @@
 %   - lum2scale function
 %   - cs input
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Remove transformations, all is done under readImages
+% ------------------------------------------------------------------------
 
-function stats = imstats(images,mask, cs)
+function stats = imstats(images,mask)
 
 if iscell(images) == 0
     error('The input must be a cell.')
@@ -79,11 +84,7 @@ stdVec = zeros(numim,1);
 histMat = zeros(256,numim);
 
 for im = 1:numim
-    if ndims(images{im}) == 3
-        im1 = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
-    else
-        im1 = images{im};
-    end
+    im1 = images{im};
     if nargin > 1
         if iscell(mask)==1
             m = mask{im};

@@ -1,5 +1,5 @@
 %
-% lum_calc, January 2019
+% lumCalc, January 2019
 % (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
 %
 % Adapted to be integrated with SHINE_color toolbox on February 2019 
@@ -40,9 +40,14 @@
 % post). Previous versions re-read & transformed rgb images;
 % - Luminace is calculated and reported in greyscale (0-255).
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, April 2023, version 0.0.5
+% (c) Rodrigo Dal Ben
+%
+% - Rename function lum_calc to lumCalc.
+% ------------------------------------------------------------------------
 
 
-function lum_calc (images_orig, images, imname, cs)
+function lumCalc (images_orig, images, imname, cs, rgb_channel)
 % Set output folder
 output_folder_diagnostics = fullfile(pwd,'SHINE_color_OUTPUT', 'DIAGNOSTICS');
 
@@ -54,6 +59,15 @@ if cs == 1 % hsv
     cs_tag = 'hsv_'; % colorspace tag
 elseif cs == 2 % lab
     cs_tag = 'cielab_';
+elseif cs == 3 % lab
+    cs_tag = strcat('rgb_',rgb_channel,'_');
+end
+
+% scale HSV and CIELab images
+for z = 1:numim
+    if cs == 1 || cs == 2 % hsv or cielab
+        images{z} = lum2scale(images{z}, cs);
+    end   
 end
 
 % Open output .txt
@@ -71,7 +85,7 @@ Sd_post = 0;
 
 for i = 1:numim
   
-   % Recording indiviudal means and sds
+   % Recording individual means and sds
    m1 = mean2(images_orig{i});
    m2 = mean2(images{i});
    
@@ -112,7 +126,7 @@ fprintf(statistics_pre_post, '%s\t%.4f\t%.4f\t%s\t%.4f\t%.4f', img1, M_pre, Sd_p
 fclose('all'); 
 
 % Display progress msg on Command window
-disp('Progress: lum_calc sucessful') 
+disp('Progress: lumCalc sucessful') 
 disp('Progress: summary stats are in OUTPUT/DIAGNOSTICS');
 
 end

@@ -51,8 +51,13 @@
 %
 % Replace 'rgb2gray' for 'lum2scale' function
 % ------------------------------------------------------------------------
+% SHINE_color toolbox, March 2023, version 0.0.5
+% (c) Rodrigo Dal Ben (dalbenwork@gmail.com)
+%
+% Remove transformations, all is done under readImages
+% ------------------------------------------------------------------------
 
-function images = lumMatch(images,mask,lum)
+function images = lumMatch(images,mask,lum) 
 
 if iscell(images) == 0
     error('The input must be a cell.')
@@ -70,16 +75,17 @@ end
 
 numim = max(size(images));
 if nargin == 1
-    M = 0; S = 0;
+    M = 0; 
+    S = 0;
+    
     for im = 1:numim
-        if ndims(images{im}) == 3
-            images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
-        end
         M = M + mean2(images{im});
         S = S + std2(images{im});
     end
+    
     M = M/numim;
     S = S/numim;
+        
     for im = 1:numim
         im1 = double(images{im});
         if std2(im1)~=0
@@ -89,12 +95,10 @@ if nargin == 1
         end
         images{im} = uint8(im1);
     end
+    
 elseif nargin == 2
     M = 0; S = 0;
     for im = 1:numim
-        if ndims(images{im}) == 3
-           images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
-        end
         im1 = images{im};
         if iscell(mask) == 1
             m = mask{im};
@@ -124,9 +128,6 @@ elseif nargin == 2
 elseif nargin == 3
     M = lum(1); S = lum(2);
     for im = 1:numim
-        if ndims(images{im}) == 3
-            images{im} = lum2scale(images{im}, cs); % SHINE_color: replaced rgb2gray(im1) for a function that scales hsv Value channel
-        end
         im1 = double(images{im});
         if isempty(mask) == 1
             if std2(im1) ~= 0
