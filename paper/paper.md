@@ -11,7 +11,7 @@ authors:
   orcid: 0000-0003-2185-8762
   affiliation: 1
 affiliations:
-- name: Concordia University
+- name: Ambrose University
   index: 1
 date: 26 June 2023
 bibliography: paper.bib
