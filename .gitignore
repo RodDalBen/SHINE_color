@@ -1,6 +1,9 @@
 # extra and test files
 00_untracked/*
 
+# R history
+**.Rhistory
+
 # OS files
 **.DS_Store
 
