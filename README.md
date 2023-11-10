@@ -25,7 +25,7 @@ Please note that `SHINE_color` does not read transparent (alpha) channels from .
 ***
 
 References    
-Dal Ben, R. (2021, July 5). SHINE_color: controlling low-level properties of colorful images. https://doi.org/10.31234/osf.io/fec6x
+Dal Ben, R. (2023). SHINE_color: controlling low-level properties of colorful images. MethodX, 11, 102377. https://doi.org/10.1016/j.mex.2023.102377
 
 Willenbockel, V., Sadr, J., Fiset, D., Horne, G. O., Gosselin, F., & Tanaka, J. W. (2010). Controlling low-level image properties: The SHINE toolbox. Behavior Research Methods, 42(3), 671–684. http://doi.org/10.3758/BRM.42.3.671    
 SHINE toolbox is available at: http://www.mapageweb.umontreal.ca/gosselif/SHINE/
