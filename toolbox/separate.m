@@ -59,6 +59,7 @@ function [mask_fgr,mask_bgr,background] = separate(image,fig,background)
 
 if nargin < 3 || background > 255 || background < 0
     background = image(find(max(imhist(image))));
+    %[~, background] = max(imhist(image));
 end
 idx = image==background;
 image(idx) = 0;

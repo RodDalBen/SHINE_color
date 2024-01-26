@@ -124,7 +124,7 @@ elseif im_vid == 1
                 'Behavior Research Methods, 42(3), 671?684. http://doi.org/10.3758/BRM.42.3.671\n\n'])
             error('Please select another colorspace.');
         
-    end
+        end
     end
     
     while y_n_plot ~= 1 && y_n_plot ~= 2
@@ -224,8 +224,8 @@ if temp == 2
         if wim == 2
             wim = 0;
             while wim ~= 2 && wim ~= 3
-                wim = 1+input('Segmentation of: [1=source images, 2=template(s)]: ');
-                if isempty(wim) == 1
+                wim = 1+input('Segmentation of: [1=source images]: '); %2=template(s)]: '); -template feature disable
+                if isempty(wim) == 1 || wim ~= 2 %template feature disable
                     disp(quitmsg)
                     error('Please select an option');
                 end
