@@ -33,7 +33,7 @@ channel_mod = [];
                 channel_mod = lumMatch(channel);
             else
                 channel_mod = lumMatch(channel,mask_fgr);
-                channel_mod = lumMatch(channel,mask_bgr);
+                channel_mod = lumMatch(channel_mod,mask_bgr);
             end
             disp('Progress: lumMatch successful')                
         case {2, 5, 6}
@@ -41,7 +41,7 @@ channel_mod = [];
                 channel_mod = histMatch(channel,optim);
             else
                 channel_mod = histMatch(channel,optim,[],mask_fgr);
-                channel_mod = histMatch(channel,optim,[],mask_bgr);
+                channel_mod = histMatch(channel_mod,optim,[],mask_bgr);
             end
             disp('Progress: histMatch successful')
     end
@@ -59,7 +59,7 @@ channel_mod = [];
                 channel_mod = histMatch(channel,optim);
             else
                 channel_mod = histMatch(channel,optim,[],mask_fgr);
-                channel_mod = histMatch(channel,optim,[],mask_bgr);
+                channel_mod = histMatch(channel_mod,optim,[],mask_bgr);
             end
             disp('Progress: histMatch successful')
     end

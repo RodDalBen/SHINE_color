@@ -227,7 +227,7 @@ if nargin ~= 0
     end
     
     output_folder = outputpath;
-    template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); %marretado pra funcionar - PRECISAMOS INCLUIR UM ARGUMENTO NA LINHA DE COMANDO? OU ESSE CAMINHO NAO E' POSSIVEL POR LA?
+    template_folder = fullfile(pwd,'SHINE_color_TEMPLATE'); %template feature disable. Dummy value passed
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: wizard
@@ -248,9 +248,7 @@ if numim < 2
     error('At least 2 images are required. Please check pathnames and file format.') % SHINE_color: >= 2 images required
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SHINE_color: display info about transformations
-it = displayInfo(mode,wholeIm,background,it);
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SHINE_color: perform transformations
@@ -262,10 +260,14 @@ for iteration = 1:it
     if cs == 1
         % SHINE_color: separate foreground from background
         [mask_fgr,mask_bgr,background] = maskFgrBgr(wholeIm,channel3,numim,background,template_folder,imformat,nargin);
+        % SHINE_color: display info about transformations
+        it = displayInfo(mode,wholeIm,background,it); 
         channel3_mod = processImage(channel3, mode, wholeIm, mask_fgr, mask_bgr, optim, rescaling);
     elseif cs == 2
         % SHINE_color: separate foreground from background
         [mask_fgr,mask_bgr,background] = maskFgrBgr(wholeIm,channel1,numim,background,template_folder,imformat,nargin);
+        % SHINE_color: display info about transformations
+        it = displayInfo(mode,wholeIm,background,it);
         channel1_mod = processImage(channel1, mode, wholeIm, mask_fgr, mask_bgr, optim, rescaling);
     elseif cs == 3
         channel1_mod = processImage(channel1, mode, wholeIm, [], [], optim, rescaling);
